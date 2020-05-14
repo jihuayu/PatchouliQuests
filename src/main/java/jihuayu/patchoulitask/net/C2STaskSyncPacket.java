@@ -1,10 +1,9 @@
 package jihuayu.patchoulitask.net;
 
+import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.PacketBuffer;
@@ -52,12 +51,10 @@ public class C2STaskSyncPacket extends ClientPacket {
                 if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof CollectTaskPage) {
-                   INBT n = player.getPersistentData().get("patchouliquests");
-                   if (n instanceof CompoundNBT){
-                       NBTHelper nbt = NBTHelper.of((CompoundNBT) n);
-                       boolean over = nbt.getBoolean(String.format("%s.%s.%d",message.book.toString(),message.entry.toString(),message.page));
-                       new S2CTaskCheckPacket(message.book,message.entry,over,message.page).send(player);
-                   }
+                    CompoundNBT n = player.getPersistentData();
+                    NBTHelper nbt = NBTHelper.of(n);
+                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d",message.book.toString(),message.entry.toString(),message.page));
+                    new S2CTaskCheckPacket(message.book,message.entry,over,message.page).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

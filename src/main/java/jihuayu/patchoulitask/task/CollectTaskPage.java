@@ -3,6 +3,9 @@ package jihuayu.patchoulitask.task;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.net.C2STaskCheckPacket;
+import jihuayu.patchoulitask.net.C2STaskSyncPacket;
+import jihuayu.patchoulitask.util.CheckUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -11,6 +14,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -50,7 +54,7 @@ public class CollectTaskPage extends PageQuest {
         for (String i : rewardStr) {
             reward.add(ItemStackUtil.loadStackFromString(i));
         }
-
+        new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
     }
 
     @Override
@@ -61,7 +65,6 @@ public class CollectTaskPage extends PageQuest {
         addButton(button);
         updateButtonText(button);
         textRender = new BookTextRenderer(parent, text, 0, getTextHeight());
-
     }
 
     @Override
@@ -98,15 +101,28 @@ public class CollectTaskPage extends PageQuest {
     protected void questButtonClicked(Button button) {
         String res = entry.getId().toString();
         new C2STaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.consume, this.pageNum).send();
-        PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(parent.book);
-
-        if (!data.completedManualQuests.contains(res)) {
-            data.completedManualQuests.add(res);
-            PersistentData.save();
-            updateButtonText(button);
-            entry.markReadStateDirty();
+        boolean ok = CheckUtil.checkTask(items, Minecraft.getInstance().player.container.getInventory(),consume);
+        stats = ok ? 1 : -1;
+        boolean task = true;
+        for (BookPage i : entry.getPages()){
+            if (i instanceof CollectTaskPage){
+                if (((CollectTaskPage) i).stats <= 0){
+                    task = false;
+                }
+            }
         }
-
+        PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(parent.book);
+        if (task){
+            if (!data.completedManualQuests.contains(res)) {
+                data.completedManualQuests.add(res);
+            }
+        }
+        else {
+            data.completedManualQuests.remove(res);
+        }
+        PersistentData.save();
+        updateButtonText(button);
+        entry.markReadStateDirty();
     }
 
     private void updateButtonText(Button button) {

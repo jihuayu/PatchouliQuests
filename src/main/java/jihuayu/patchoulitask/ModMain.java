@@ -1,6 +1,8 @@
 package jihuayu.patchoulitask;
 
-import jihuayu.patchoulitask.net.NetworkChannel;
+import jihuayu.patchoulitask.net.C2STaskSyncPacket;
+import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
+import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.C2STaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -22,6 +24,8 @@ public class ModMain {
     public ModMain(){
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModMainConfig.spec, MOD_ID+".toml");
         NetworkChannel.register(C2STaskCheckPacket.class, new C2STaskCheckPacket.Handler());
+        NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
+        NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
 
     }
 }

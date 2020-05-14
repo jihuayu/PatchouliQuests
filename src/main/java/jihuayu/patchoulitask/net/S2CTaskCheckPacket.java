@@ -1,13 +1,10 @@
 package jihuayu.patchoulitask.net;
 
+import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.CollectTaskPage;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -35,7 +32,6 @@ public class S2CTaskCheckPacket extends Packet {
             buffer.writeResourceLocation(msg.entry);
             buffer.writeBoolean(msg.ok);
             buffer.writeInt(msg.page);
-
         }
 
         @Override
@@ -44,7 +40,6 @@ public class S2CTaskCheckPacket extends Packet {
             ResourceLocation entry = buffer.readResourceLocation();
             boolean ok = buffer.readBoolean();
             int page = buffer.readInt();
-
             return new S2CTaskCheckPacket(book, entry, ok, page);
         }
 
@@ -55,6 +50,8 @@ public class S2CTaskCheckPacket extends Packet {
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof CollectTaskPage) {
                     ((CollectTaskPage) i).stats = message.ok ? 1 : -1;
+                    System.out.println(((CollectTaskPage) i).stats);
+                    System.out.println(message.page);
                 }
             });
             ctx.get().setPacketHandled(true);

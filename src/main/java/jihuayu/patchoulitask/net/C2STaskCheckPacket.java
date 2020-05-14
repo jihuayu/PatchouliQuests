@@ -1,9 +1,13 @@
 package jihuayu.patchoulitask.net;
 
 
+import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.CheckUtil;
+import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -54,7 +58,10 @@ public class C2STaskCheckPacket extends ClientPacket {
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof CollectTaskPage) {
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items,player.container.getInventory(),message.consume);
-                    new S2CTaskCheckPacket(message.book,message.entry,t,message.page).send(player);
+                    CompoundNBT n = player.getPersistentData();
+                        NBTHelper nbt = NBTHelper.of(n);
+                        nbt.setBoolean(String.format("patchouliquests.%s.%s.%d",message.book.toString(),message.entry.toString(),message.page),t);
+                        new S2CTaskCheckPacket(message.book,message.entry,t,message.page).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);
