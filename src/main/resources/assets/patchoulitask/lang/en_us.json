@@ -1,7 +1,7 @@
 {
   "patchouliquests.task.submit": "Submit",
-  "patchouliquests.task.over": "Complete",
+  "patchouliquests.task.over": "Completed",
   "patchouliquests.task.reward": "Reward:",
   "patchouliquests.task.need": "Need:",
-  "patchouliquests.tooltip.item.num": "Number:"
+  "patchouliquests.tooltip.item.num": "Count:"
 }
