@@ -6,8 +6,9 @@ version="${file.jarVersion}"
 displayName="Patchouli Quests"
 authors="jihuayu"
 description="Patchouli Quests"
-[[dependencies.cuisine]]
+[[dependencies.patchouliquests]]
     modId="patchouli"
     mandatory=true
+    versionRange="[1.15.2-1.2,)"
     ordering="BEFORE"
     side="BOTH"
