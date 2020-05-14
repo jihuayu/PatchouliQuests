@@ -87,8 +87,8 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     }
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), message.consume, list);
                     nbt.setBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page), t);
-                    for (ItemStack out : Lists.newArrayList(((CollectTaskPage) i).reward)){
-                        player.addItemStackToInventory(out);
+                    for (ItemStack out : ((CollectTaskPage) i).reward){
+                        player.addItemStackToInventory(out.copy());
                     }
                     if (message.consume) {
                         for (int num = 0;num < list.size();num++) {

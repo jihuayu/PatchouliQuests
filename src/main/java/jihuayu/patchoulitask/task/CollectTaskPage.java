@@ -67,6 +67,7 @@ public class CollectTaskPage extends BaseTaskPage {
 
     @Override
     public void render(int mouseX, int mouseY, float pticks) {
+        super.render(mouseX,mouseY,pticks);
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 10;

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class BaseTaskPage extends PageQuest {
     public transient int stats = 0;
-
+    Button button;
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
@@ -31,14 +31,14 @@ public class BaseTaskPage extends PageQuest {
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
         onHidden(parent);
-        Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 25, 100, 20, "", this::questButtonClicked);
+        button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 25, 100, 20, "", this::questButtonClicked);
         addButton(button);
         updateButtonText(button);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float pticks) {
-
+        updateButtonText(button);
     }
 
     protected void questButtonClicked(Button button) {
