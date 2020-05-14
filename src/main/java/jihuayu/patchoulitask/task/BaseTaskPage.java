@@ -1,5 +1,6 @@
 package jihuayu.patchoulitask.task;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.ModMain;
@@ -89,7 +90,9 @@ public class BaseTaskPage extends PageQuest {
     public boolean isCompleted(Book book) {
         return PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString());
     }
-
+    public void renderItemStackWithAddonToolTips(int x, int y, int mouseX, int mouseY, ItemStack stack, ITextComponent... addon) {
+        renderItemStackWithAddonToolTips(x,y,mouseX,mouseY,stack, Lists.newArrayList(addon));
+    }
     public void renderItemStackWithAddonToolTips(int x, int y, int mouseX, int mouseY, ItemStack stack, List<ITextComponent> addon) {
         if (stack == null || stack.isEmpty()) {
             return;

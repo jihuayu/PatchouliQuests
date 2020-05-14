@@ -34,6 +34,7 @@ import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 public class CollectTaskPage extends BaseTaskPage {
     public transient List<Ingredient> items = new ArrayList<>();
     public transient List<ItemStack> reward = new ArrayList<>();
+    public transient List<Integer> items_num = new ArrayList<>();
 
     @SerializedName("collect")
     List<String> itemsStr;
