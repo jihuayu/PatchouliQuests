@@ -60,7 +60,9 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
                 if (i instanceof CollectTaskPage) {
                     ((CollectTaskPage) i).stats = message.ok ? 1 : -1;
                     for (int j =0;j<message.task_num.size();j++){
-                        ((CollectTaskPage) i).items_num.add(j);
+                        System.out.println(message.task_num.get(j));
+                        ((CollectTaskPage) i).items_num.clear();
+                        ((CollectTaskPage) i).items_num.add(message.task_num.get(j));
                     }
                 }
             });

@@ -92,8 +92,6 @@ public class CollectTaskPage extends BaseTaskPage {
 
     protected void questButtonClicked(Button button) {
         new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.consume, this.pageNum).send();
-        boolean ok = CheckUtil.checkTask(items, Minecraft.getInstance().player.container.getInventory(), consume);
-        stats = ok ? 1 : -1;
         super.questButtonClicked(button);
     }
 
