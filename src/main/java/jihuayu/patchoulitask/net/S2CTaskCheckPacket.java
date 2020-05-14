@@ -1,7 +1,7 @@
 package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
-import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.task.BaseTaskPage;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -48,9 +48,9 @@ public class S2CTaskCheckPacket extends Packet {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
-                if (i instanceof CollectTaskPage) {
-                    ((CollectTaskPage) i).stats = message.ok ? 1 : -1;
-                    System.out.println(((CollectTaskPage) i).stats);
+                if (i instanceof BaseTaskPage) {
+                    ((BaseTaskPage) i).stats = message.ok ? 1 : -1;
+                    System.out.println(((BaseTaskPage) i).stats);
                     System.out.println(message.page);
                 }
             });

@@ -1,11 +1,10 @@
 package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
-import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -49,8 +48,8 @@ public class C2STaskSyncPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
-                if (i instanceof CollectTaskPage) {
+                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page - 1);
+                if (i instanceof BaseTaskPage) {
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
                     boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d",message.book.toString(),message.entry.toString(),message.page));

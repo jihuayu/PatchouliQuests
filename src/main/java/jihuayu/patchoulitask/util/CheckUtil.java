@@ -1,6 +1,5 @@
 package jihuayu.patchoulitask.util;
 
-import jihuayu.patchoulitask.task.CollectTaskPage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 

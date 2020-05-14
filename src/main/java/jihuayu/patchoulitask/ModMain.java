@@ -4,10 +4,9 @@ import jihuayu.patchoulitask.net.C2STaskSyncPacket;
 import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.C2STaskCheckPacket;
+import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -21,11 +20,10 @@ public class ModMain {
     static {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
     }
+
     public ModMain(){
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModMainConfig.spec, MOD_ID+".toml");
         NetworkChannel.register(C2STaskCheckPacket.class, new C2STaskCheckPacket.Handler());
         NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
         NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
-
     }
 }
