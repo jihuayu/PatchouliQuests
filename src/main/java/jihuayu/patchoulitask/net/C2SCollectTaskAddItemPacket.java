@@ -5,6 +5,9 @@ import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -12,48 +15,56 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
-public class C2STaskSyncPacket extends ClientPacket {
+@Deprecated
+public class C2SCollectTaskAddItemPacket extends ClientPacket {
     ResourceLocation book;
     ResourceLocation entry;
     int page;
-
-    public C2STaskSyncPacket(ResourceLocation book, ResourceLocation entry, int page) {
+    ResourceLocation item;
+    int num;
+    public C2SCollectTaskAddItemPacket(ResourceLocation book, ResourceLocation entry, int page,ResourceLocation item,int num) {
         this.book = book;
         this.entry = entry;
         this.page = page;
+        this.item = item;
+        this.num = num;
     }
 
-    public static class Handler extends PacketHandler<C2STaskSyncPacket> {
+    public static class Handler extends PacketHandler<C2SCollectTaskAddItemPacket> {
 
         @Override
-        public void encode(C2STaskSyncPacket msg, PacketBuffer buffer) {
+        public void encode(C2SCollectTaskAddItemPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
             buffer.writeInt(msg.page);
+            buffer.writeResourceLocation(msg.item);
+            buffer.writeInt(msg.num);
         }
 
         @Override
-        public C2STaskSyncPacket decode(PacketBuffer buffer) {
+        public C2SCollectTaskAddItemPacket decode(PacketBuffer buffer) {
             ResourceLocation book = buffer.readResourceLocation();
             ResourceLocation entry = buffer.readResourceLocation();
             int page = buffer.readInt();
-            return new C2STaskSyncPacket(book, entry, page);
+            ResourceLocation item = buffer.readResourceLocation();
+            int num = buffer.readInt();
+            return new C2SCollectTaskAddItemPacket(book, entry, page,item,num);
         }
 
         @Override
-        public void handle(C2STaskSyncPacket message, Supplier<NetworkEvent.Context> ctx) {
+        public void handle(C2SCollectTaskAddItemPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
-                    CompoundNBT n = player.getPersistentData();
-                    NBTHelper nbt = NBTHelper.of(n);
-                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d",message.book.toString(),message.entry.toString(),message.page));
-                    new S2CTaskCheckPacket(message.book,message.entry,over,message.page).send(player);
+
+
                 }
             });
             ctx.get().setPacketHandled(true);

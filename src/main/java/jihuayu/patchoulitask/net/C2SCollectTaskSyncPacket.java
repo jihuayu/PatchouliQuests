@@ -1,12 +1,10 @@
 package jihuayu.patchoulitask.net;
 
-
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
-import jihuayu.patchoulitask.util.CheckUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -14,53 +12,58 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
-public class C2STaskCheckPacket extends ClientPacket {
+public class C2SCollectTaskSyncPacket extends ClientPacket {
     ResourceLocation book;
     ResourceLocation entry;
-    boolean consume;
     int page;
 
-    public C2STaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean consume, int page) {
+    public C2SCollectTaskSyncPacket(ResourceLocation book, ResourceLocation entry, int page) {
         this.book = book;
         this.entry = entry;
-        this.consume = consume;
         this.page = page;
     }
 
-    public static class Handler extends PacketHandler<C2STaskCheckPacket> {
+    public static class Handler extends PacketHandler<C2SCollectTaskSyncPacket> {
 
         @Override
-        public void encode(C2STaskCheckPacket msg, PacketBuffer buffer) {
+        public void encode(C2SCollectTaskSyncPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
-            buffer.writeBoolean(msg.consume);
             buffer.writeInt(msg.page);
         }
 
         @Override
-        public C2STaskCheckPacket decode(PacketBuffer buffer) {
+        public C2SCollectTaskSyncPacket decode(PacketBuffer buffer) {
             ResourceLocation book = buffer.readResourceLocation();
             ResourceLocation entry = buffer.readResourceLocation();
-            boolean consume = buffer.readBoolean();
             int page = buffer.readInt();
-            return new C2STaskCheckPacket(book, entry, consume, page);
+            return new C2SCollectTaskSyncPacket(book, entry, page);
         }
 
         @Override
-        public void handle(C2STaskCheckPacket message, Supplier<NetworkEvent.Context> ctx) {
+        public void handle(C2SCollectTaskSyncPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page - 1);
+                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
-                    boolean t = CheckUtil.checkTask(((BaseTaskPage) i).items,player.container.getInventory(),message.consume);
                     CompoundNBT n = player.getPersistentData();
-                        NBTHelper nbt = NBTHelper.of(n);
-                        nbt.setBoolean(String.format("patchouliquests.%s.%s.%d",message.book.toString(),message.entry.toString(),message.page),t);
-                        new S2CTaskCheckPacket(message.book,message.entry,t,message.page).send(player);
+                    NBTHelper nbt = NBTHelper.of(n);
+                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over",message.book.toString(),message.entry.toString(),message.page));
+                    ListNBT l = nbt.getTagList(String.format("patchouliquests.%s.%s.%d.num",message.book.toString(),message.entry.toString(),message.page), NBTHelper.NBT.INT);
+                    List<Integer> list = new ArrayList<>();
+                    if (l!=null)
+                    for (INBT k : l){
+                        if (k instanceof IntNBT){
+                            list.add(((IntNBT) k).getInt());
+                        }
+                    }
+                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.page,list).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);
