@@ -7,6 +7,7 @@ import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.util.JEIUtil;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -24,15 +25,10 @@ import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 
 public class CollectTaskPage extends BaseTaskPage {
     public transient List<Ingredient> items = new ArrayList<>();
-    public transient List<ItemStack> reward = new ArrayList<>();
     public transient List<Integer> items_num = new ArrayList<>();
 
     @SerializedName("collect")
     Map<String,Integer> itemsStr;
-    @SerializedName("reward")
-    List<String> rewardStr;
-    @SerializedName("finish_cmd")
-    public String finishCmd;
     @SerializedName("consume")
     public boolean consume;
 
@@ -48,11 +44,6 @@ public class CollectTaskPage extends BaseTaskPage {
             items.add(ii);
             items_num.add(0);
         }
-        for (String i : rewardStr) {
-            reward.add(ItemStackUtil.loadStackFromString(i));
-        }
-        if (finishCmd == null)
-            finishCmd = "";
         if (stats==0){
             new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
         }
@@ -84,16 +75,8 @@ public class CollectTaskPage extends BaseTaskPage {
             renderIngredientAndNumAndJEIWithOver(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, items.get(i),
                     consume?items_num.get(i):-1);
         }
-        recipeY = GuiBook.PAGE_HEIGHT - ((int) Math.ceil(reward.size() * 1.0 / wrap)) * 24 - 12 - 25;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward"))/2+4, recipeY - 6, book.textColor);
-        for (int i = 0; i < reward.size(); i++) {
-            RenderSystem.enableBlend();
-            RenderSystem.color4f(1F, 1F, 1F, 1F);
-            mc.textureManager.bindTexture(book.craftingTexture);
-            AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
-            super.renderItemStackAndNumAndJEI(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i));
-        }
+        RenderHelper.disableStandardItemLighting();
+
     }
 
     protected void questButtonClicked(Button button) {

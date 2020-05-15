@@ -70,7 +70,7 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
                     boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page));
-                    if (over){
+                    if (over) {
                         new S2CTaskCheckPacket(message.book, message.entry, over, message.page).send(player);
                         return;
                     }
@@ -78,8 +78,8 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     List<Integer> list = new ArrayList<>();
                     if (l == null) {
                         l = new ListNBT();
-                        for (int num = 0;num < ((CollectTaskPage) i).items.size();num++) {
-                            l.add(num,IntNBT.valueOf(0));
+                        for (int num = 0; num < ((CollectTaskPage) i).items.size(); num++) {
+                            l.add(num, IntNBT.valueOf(0));
                         }
                     }
                     for (INBT k : l) {
@@ -89,29 +89,31 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     }
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), ((CollectTaskPage) i).consume, list);
                     nbt.setBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page), t);
-                    if(t){
-                        for (ItemStack out : ((CollectTaskPage) i).reward){
+                    if (t) {
+                        for (ItemStack out : ((CollectTaskPage) i).reward) {
                             player.addItemStackToInventory(out.copy());
                         }
-                        System.out.println( ((CollectTaskPage) i).finishCmd);
-                        if (!((CollectTaskPage) i).finishCmd.isEmpty()){
-                            try {
-                                ModMain.COMMANDS.execute(((CollectTaskPage) i).finishCmd,new CommandSource(player,new Vec3d(player.getPosX(),player.getPosY(),player.getPosZ())
-                                        ,player.getPitchYaw(),
-                                        (ServerWorld) player.world,99,"",new StringTextComponent(""),player.server,player));
-                            } catch (CommandSyntaxException e) {
-                                ModMain.LOGGER.error(String.format("command %s excute failed!",((CollectTaskPage) i).finishCmd));
+                        System.out.println(((CollectTaskPage) i).finishCmd);
+                        if (!((CollectTaskPage) i).finishCmd.isEmpty()) {
+                            for (String pp : ((CollectTaskPage) i).finishCmd) {
+                                try {
+                                    ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ())
+                                            , player.getPitchYaw(),
+                                            (ServerWorld) player.world, 99, "", new StringTextComponent(""), player.server, player));
+                                } catch (CommandSyntaxException e) {
+                                    ModMain.LOGGER.error(String.format("command %s excute failed!", ((CollectTaskPage) i).finishCmd));
+                                }
                             }
+
                         }
                     }
                     if (((CollectTaskPage) i).consume) {
-                        for (int num = 0;num < list.size();num++) {
-                            l.set(num,IntNBT.valueOf(list.get(num)));
+                        for (int num = 0; num < list.size(); num++) {
+                            l.set(num, IntNBT.valueOf(list.get(num)));
                         }
-                        nbt.setTag(String.format("patchouliquests.%s.%s.%d.num", message.book.toString(), message.entry.toString(), message.page),l);
-                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.page,list).send(player);
-                    }
-                    else {
+                        nbt.setTag(String.format("patchouliquests.%s.%s.%d.num", message.book.toString(), message.entry.toString(), message.page), l);
+                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.page, list).send(player);
+                    } else {
                         new S2CTaskCheckPacket(message.book, message.entry, t, message.page).send(player);
                     }
 
