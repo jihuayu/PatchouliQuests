@@ -17,7 +17,7 @@ public class BookHelper {
         for (ItemStack out : ( i).reward) {
             player.addItemStackToInventory(out.copy());
         }
-        if (!((CollectTaskPage) i).finishCmd.isEmpty()) {
+        if (!(i).finishCmd.isEmpty()) {
             for (String pp : ( i).finishCmd) {
                 try {
                     ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ())

@@ -7,6 +7,7 @@ import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.S2CCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
+import jihuayu.patchoulitask.net.nearpostition.C2SNearPositionTaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.task.NearPositionTaskPage;
 import net.minecraft.command.CommandSource;
@@ -39,6 +40,7 @@ public class ModMain {
         NetworkChannel.register(S2CCollectTaskCheckPacket.class, new S2CCollectTaskCheckPacket.Handler());
         NetworkChannel.register(S2CLockTaskPacket.class, new S2CLockTaskPacket.Handler());
         NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
+        NetworkChannel.register(C2SNearPositionTaskCheckPacket.class, new C2SNearPositionTaskCheckPacket.Handler());
     }
     @SubscribeEvent
     protected static void serverInit(FMLServerStartingEvent event) {

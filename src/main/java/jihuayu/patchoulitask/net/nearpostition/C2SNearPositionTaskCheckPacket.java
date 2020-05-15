@@ -84,8 +84,11 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
                     if(player.getPosition().distanceSq(((NearPositionTaskPage) i).x, ((NearPositionTaskPage) i).y, ((NearPositionTaskPage) i).z,true)<=
                             ((NearPositionTaskPage) i).range){
                         BookHelper.complete(player, (BaseTaskPage) i);
+                        BookNBTHelper.setOver(player, message.book.toString(), message.entry.toString(), message.id,true);
                         BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.id,true);
+                        return;
                     }
+                    BookNBTHelper.setOver(player, message.book.toString(), message.entry.toString(), message.id,false);
                     BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.id,false);
                 }
 

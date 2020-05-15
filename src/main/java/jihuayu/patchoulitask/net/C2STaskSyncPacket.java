@@ -51,10 +51,10 @@ public class C2STaskSyncPacket extends ClientPacket {
                 BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
                 if (i != null) {
                     if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).hide);
+                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((BaseTaskPage) i).hide);
                     }
                     if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).lock);
+                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((BaseTaskPage) i).lock);
                     }
                     boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.id);
                     boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
