@@ -16,6 +16,8 @@ import net.minecraft.command.arguments.ResourceLocationArgument;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -98,7 +100,7 @@ public class LockAndHideCommand {
                 }
             }
         } catch (Exception e) {
-            player.sendMessage(new TranslationTextComponent("patchouliquests.command.failed"));
+            player.sendMessage(new TranslationTextComponent("patchouliquests.command.failed").setStyle(new Style().setColor(TextFormatting.RED)));
         }
         return 0;
     }

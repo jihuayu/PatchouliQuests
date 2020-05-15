@@ -4,5 +4,7 @@
   "patchouliquests.task.reward": "奖励:",
   "patchouliquests.task.need": "需要:",
   "patchouliquests.tooltip.item.num": "数量:",
-  "patchouliquests.tooltip.item.consume": "将会消耗物品"
+  "patchouliquests.tooltip.item.consume": "将会消耗物品",
+  "patchouliquests.task.lock": "锁定",
+  "patchouliquests.command.failed": "指令运行错误!"
 }
