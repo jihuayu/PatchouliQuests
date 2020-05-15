@@ -1,7 +1,9 @@
-package jihuayu.patchoulitask.net;
+package jihuayu.patchoulitask.net.collect;
 
 
-import com.google.common.collect.Lists;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import jihuayu.patchoulitask.ModMain;
+import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.CheckUtil;
@@ -10,13 +12,15 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
@@ -29,13 +33,11 @@ import java.util.function.Supplier;
 public class C2SCollectTaskCheckPacket extends ClientPacket {
     ResourceLocation book;
     ResourceLocation entry;
-    boolean consume;
     int page;
 
-    public C2SCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean consume, int page) {
+    public C2SCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, int page) {
         this.book = book;
         this.entry = entry;
-        this.consume = consume;
         this.page = page;
     }
 
@@ -45,7 +47,6 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
         public void encode(C2SCollectTaskCheckPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
-            buffer.writeBoolean(msg.consume);
             buffer.writeInt(msg.page);
         }
 
@@ -53,9 +54,8 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
         public C2SCollectTaskCheckPacket decode(PacketBuffer buffer) {
             ResourceLocation book = buffer.readResourceLocation();
             ResourceLocation entry = buffer.readResourceLocation();
-            boolean consume = buffer.readBoolean();
             int page = buffer.readInt();
-            return new C2SCollectTaskCheckPacket(book, entry, consume, page);
+            return new C2SCollectTaskCheckPacket(book, entry, page);
         }
 
         @Override
@@ -87,14 +87,24 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                             list.add(((IntNBT) k).getInt());
                         }
                     }
-                    boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), message.consume, list);
+                    boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), ((CollectTaskPage) i).consume, list);
                     nbt.setBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page), t);
                     if(t){
                         for (ItemStack out : ((CollectTaskPage) i).reward){
                             player.addItemStackToInventory(out.copy());
                         }
+                        System.out.println( ((CollectTaskPage) i).finishCmd);
+                        if (!((CollectTaskPage) i).finishCmd.isEmpty()){
+                            try {
+                                ModMain.COMMANDS.execute(((CollectTaskPage) i).finishCmd,new CommandSource(player,new Vec3d(player.getPosX(),player.getPosY(),player.getPosZ())
+                                        ,player.getPitchYaw(),
+                                        (ServerWorld) player.world,99,"",new StringTextComponent(""),player.server,player));
+                            } catch (CommandSyntaxException e) {
+                                ModMain.LOGGER.error(String.format("command %s excute failed!",((CollectTaskPage) i).finishCmd));
+                            }
+                        }
                     }
-                    if (message.consume) {
+                    if (((CollectTaskPage) i).consume) {
                         for (int num = 0;num < list.size();num++) {
                             l.set(num,IntNBT.valueOf(list.get(num)));
                         }

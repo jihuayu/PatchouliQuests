@@ -2,26 +2,21 @@ package jihuayu.patchoulitask.task;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
-import jihuayu.patchoulitask.net.C2SCollectTaskSyncPacket;
-import jihuayu.patchoulitask.net.C2SCollectTaskCheckPacket;
-import jihuayu.patchoulitask.util.CheckUtil;
+import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
+import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.util.JEIUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +32,9 @@ public class CollectTaskPage extends BaseTaskPage {
     @SerializedName("reward")
     List<String> rewardStr;
     @SerializedName("finish_cmd")
-    String finishCmd;
+    public String finishCmd;
     @SerializedName("consume")
-    boolean consume;
+    public boolean consume;
 
     @Override
     public void build(BookEntry entry, int pageNum) {
@@ -56,6 +51,8 @@ public class CollectTaskPage extends BaseTaskPage {
         for (String i : rewardStr) {
             reward.add(ItemStackUtil.loadStackFromString(i));
         }
+        if (finishCmd == null)
+            finishCmd = "";
         if (stats==0){
             new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
         }
@@ -85,7 +82,7 @@ public class CollectTaskPage extends BaseTaskPage {
             mc.textureManager.bindTexture(book.craftingTexture);
             AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
             renderIngredientAndNumAndJEIWithOver(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, items.get(i),
-                    items_num.get(i));
+                    consume?items_num.get(i):-1);
         }
         recipeY = GuiBook.PAGE_HEIGHT - ((int) Math.ceil(reward.size() * 1.0 / wrap)) * 24 - 12 - 25;
         parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"),
@@ -100,7 +97,7 @@ public class CollectTaskPage extends BaseTaskPage {
     }
 
     protected void questButtonClicked(Button button) {
-        new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.consume, this.pageNum).send();
+        new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
         super.questButtonClicked(button);
     }
 

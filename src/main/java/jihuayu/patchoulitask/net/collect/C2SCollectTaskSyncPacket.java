@@ -1,4 +1,4 @@
-package jihuayu.patchoulitask.net;
+package jihuayu.patchoulitask.net.collect;
 
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;

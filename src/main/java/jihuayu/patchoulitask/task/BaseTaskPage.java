@@ -22,6 +22,7 @@ import java.util.List;
 public class BaseTaskPage extends PageQuest {
     public transient int stats = 0;
     Button button;
+
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
@@ -44,20 +45,19 @@ public class BaseTaskPage extends PageQuest {
     protected void questButtonClicked(Button button) {
         String res = entry.getId().toString();
         boolean task = true;
-        for (BookPage i : entry.getPages()){
-            if (i instanceof BaseTaskPage){
-                if (((BaseTaskPage) i).stats <= 0){
+        for (BookPage i : entry.getPages()) {
+            if (i instanceof BaseTaskPage) {
+                if (((BaseTaskPage) i).stats <= 0) {
                     task = false;
                 }
             }
         }
         PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(parent.book);
-        if (task){
+        if (task) {
             if (!data.completedManualQuests.contains(res)) {
                 data.completedManualQuests.add(res);
             }
-        }
-        else {
+        } else {
             data.completedManualQuests.remove(res);
         }
         PersistentData.save();
@@ -74,7 +74,7 @@ public class BaseTaskPage extends PageQuest {
         try {
             return PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -96,7 +96,7 @@ public class BaseTaskPage extends PageQuest {
         RenderHelper.disableStandardItemLighting();
     }
 
-    public void renderItemStackAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, ItemStack stack,int over) {
+    public void renderItemStackAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, ItemStack stack, int over) {
         if (stack == null || stack.isEmpty()) {
             return;
         }
@@ -107,15 +107,18 @@ public class BaseTaskPage extends PageQuest {
             List<ITextComponent> list = new ArrayList<>(stack.getTooltip(mc.player,
                     mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
-                    .appendText(String.valueOf(over)+"/"+String.valueOf(stack.getCount())));
+                    .appendText(over >= 0 ? (over) + "/" : "" + (stack.getCount())));
+            if (over>=0)
+                list.add(new TranslationTextComponent("patchouliquests.tooltip.item.consume").setStyle(new Style().setColor(TextFormatting.RED)));
             parent.setTooltip(list);
         }
         RenderHelper.disableStandardItemLighting();
     }
-    public void renderIngredientAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, Ingredient ingr,int over) {
+
+    public void renderIngredientAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, Ingredient ingr, int over) {
         ItemStack[] stacks = ingr.getMatchingStacks();
         if (stacks.length > 0) {
-            renderItemStackAndNumAndJEIWithOver(x, y, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length],over);
+            renderItemStackAndNumAndJEIWithOver(x, y, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length], over);
         }
     }
 }

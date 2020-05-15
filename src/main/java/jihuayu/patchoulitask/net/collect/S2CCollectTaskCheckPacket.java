@@ -1,7 +1,6 @@
-package jihuayu.patchoulitask.net;
+package jihuayu.patchoulitask.net.collect;
 
 import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
-import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

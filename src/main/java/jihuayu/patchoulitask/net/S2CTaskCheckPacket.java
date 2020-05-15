@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 
 public class S2CTaskCheckPacket extends Packet {
     public boolean ok;
-    ResourceLocation book;
-    ResourceLocation entry;
-    int page;
+    public ResourceLocation book;
+    public ResourceLocation entry;
+    public int page;
 
     public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page) {
         this.book = book;
