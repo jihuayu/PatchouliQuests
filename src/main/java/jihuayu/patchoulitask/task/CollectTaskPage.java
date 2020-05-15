@@ -79,7 +79,7 @@ public class CollectTaskPage extends BaseTaskPage {
     }
     @Override
     protected boolean questButtonClicked1(Button button) {
-        if (super.questButtonClicked1(button))return false;
+        if (!super.questButtonClicked1(button))return false;
         new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         return true;
     }

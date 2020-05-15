@@ -90,7 +90,7 @@ public class BaseTaskPage extends PageQuest {
                 RenderSystem.color4f(1F, 1F, 1F, 1F);
                 mc.textureManager.bindTexture(book.craftingTexture);
                 AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
-                renderItemStackAndNumAndGet(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i));
+                renderItemStackAndNumAndGet(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i),reward_stats.get(i));
             }
             if (!finishCmd.isEmpty()){
                 RenderSystem.enableBlend();
@@ -179,7 +179,7 @@ public class BaseTaskPage extends PageQuest {
         }
         RenderHelper.disableStandardItemLighting();
     }
-    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack) {
+    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack,boolean ok) {
         if (stack == null || stack.isEmpty()) {
             return;
         }
@@ -191,7 +191,8 @@ public class BaseTaskPage extends PageQuest {
                     mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
                     .appendText(String.valueOf(stack.getCount())));
-            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get"));
+            if (!ok)
+                list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get"));
             parent.setTooltip(list);
         }
         RenderHelper.disableStandardItemLighting();
