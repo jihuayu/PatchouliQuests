@@ -73,7 +73,11 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                     }
                     boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
                     boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
-                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.id,list,hide,lock).send(player);
+                    ArrayList<Boolean> list1 = new ArrayList<>();
+                    for (int j = 0;j<((BaseTaskPage) i).reward.size();j++){
+                        list1.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                    }
+                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.id,list,hide,lock,list1).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

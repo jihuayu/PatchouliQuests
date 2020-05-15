@@ -14,9 +14,6 @@ import net.minecraft.world.server.ServerWorld;
 
 public class BookHelper {
     public static void complete(ServerPlayerEntity player, BaseTaskPage i){
-        for (ItemStack out : ( i).reward) {
-            player.addItemStackToInventory(out.copy());
-        }
         if (!(i).finishCmd.isEmpty()) {
             for (String pp : ( i).finishCmd) {
                 try {

@@ -75,10 +75,14 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                         BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).lock);
                     }
                     boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.id);
+                    ArrayList<Boolean> list1 = new ArrayList<>();
+                    for (int j = 0;j<((BaseTaskPage) i).reward.size();j++){
+                        list1.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                    }
                     if (over) {
                         boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
                         boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
-                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock).send(player);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock,list1).send(player);
                         return;
                     }
                     ListNBT l = BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.id);
@@ -106,10 +110,11 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                             l.set(num, IntNBT.valueOf(list.get(num)));
                         }
                         BookNBTHelper.setTaskNum(player,message.book.toString(),message.entry.toString(),message.id,l);
-                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.id, list,hide,lock).send(player);
+
+                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.id, list,hide,lock,list1).send(player);
                     } else {
 
-                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock).send(player);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock,list1).send(player);
                     }
 
                 }

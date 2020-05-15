@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.task;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
+import jihuayu.patchoulitask.net.C2SRewardGetPacket;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
@@ -27,6 +28,7 @@ public class BaseTaskPage extends PageQuest {
     public transient int stats = 0;
     public transient boolean is_hide = false;
     public transient List<ItemStack> reward = new ArrayList<>();
+    public transient List<Boolean> reward_stats = new ArrayList<>();
     Button button;
     @SerializedName("finish_cmd")
     public List<String> finishCmd;
@@ -45,12 +47,12 @@ public class BaseTaskPage extends PageQuest {
         if (rewardStr != null){
             for (String i : rewardStr) {
                 reward.add(ItemStackUtil.loadStackFromString(i));
+                reward_stats.add(false);
             }
         }
         if (finishCmd == null)
             finishCmd = new ArrayList<>();
         if (id == null){
-            System.out.println(this);
             id = pageNum;
         }
     }
@@ -88,7 +90,7 @@ public class BaseTaskPage extends PageQuest {
                 RenderSystem.color4f(1F, 1F, 1F, 1F);
                 mc.textureManager.bindTexture(book.craftingTexture);
                 AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
-                renderItemStackAndNumAndJEI(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i));
+                renderItemStackAndNumAndGet(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i));
             }
             if (!finishCmd.isEmpty()){
                 RenderSystem.enableBlend();
@@ -104,7 +106,20 @@ public class BaseTaskPage extends PageQuest {
     protected void questButtonClicked(Button button) {
         questButtonClicked1(button);
     }
-
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (hide)return false;
+        if (stats<=0)return true;
+        int wrap = GuiBook.PAGE_WIDTH / 24;
+        int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
+        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size()+(finishCmd.isEmpty()?0:1)) * 1.0 / wrap))) * 24 - 12 - 25;
+        for (int i = 0; i < reward.size(); i++) {
+            if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
+                if (!reward_stats.get(i))
+                    new C2SRewardGetPacket(book.id,entry.getId(),id,i).send();
+            }
+        }
+        return true;
+    }
     protected boolean questButtonClicked1(Button button) {
         if (lock)return false;
         String res = entry.getId().toString();
@@ -164,7 +179,7 @@ public class BaseTaskPage extends PageQuest {
         }
         RenderHelper.disableStandardItemLighting();
     }
-    public void renderItemStackAndNumAndJEI(int x, int y, int mouseX, int mouseY, ItemStack stack) {
+    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return;
         }
@@ -176,6 +191,7 @@ public class BaseTaskPage extends PageQuest {
                     mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
                     .appendText(String.valueOf(stack.getCount())));
+            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get"));
             parent.setTooltip(list);
         }
         RenderHelper.disableStandardItemLighting();

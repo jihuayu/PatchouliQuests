@@ -22,6 +22,7 @@ public class NearHandler {
             time = 0;
             PlayerEntity player = Minecraft.getInstance().player;
             for(NearPositionTaskPage i : NearPositionTaskPage.POSES){
+                if (i.stats>0 || i.lock)continue;
                 if(player.getPosition().distanceSq(i.x,i.y,i.z,true)<=i.range){
                     new C2SNearPositionTaskCheckPacket(i.book.id,i.parent.getEntry().getId(),i.id).send();
                 }

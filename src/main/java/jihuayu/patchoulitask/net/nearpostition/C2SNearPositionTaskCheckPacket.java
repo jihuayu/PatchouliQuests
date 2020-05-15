@@ -78,7 +78,11 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
                     if (over) {
                         boolean hide = BookNBTHelper.isHide(player, message.book.toString(), message.entry.toString(), message.id);
                         boolean lock = BookNBTHelper.isLock(player, message.book.toString(), message.entry.toString(), message.id);
-                        new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock).send(player);
+                        ArrayList<Boolean> list = new ArrayList<>();
+                        for (int j = 0;j<((BaseTaskPage) i).reward.size();j++){
+                            list.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                        }
+                        new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock,list).send(player);
                         return;
                     }
                     if(player.getPosition().distanceSq(((NearPositionTaskPage) i).x, ((NearPositionTaskPage) i).y, ((NearPositionTaskPage) i).z,true)<=

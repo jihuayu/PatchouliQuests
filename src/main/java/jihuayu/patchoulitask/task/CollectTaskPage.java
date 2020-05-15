@@ -85,10 +85,10 @@ public class CollectTaskPage extends BaseTaskPage {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (hide)return false;
+        if (!super.mouseClicked(mouseX,mouseY,mouseButton))return false;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
-        int recipeY = 10;
+        int recipeY = 25;
         for (int i = 0; i < items.size(); i++) {
             if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
                 ItemStack[] stacks = items.get(i).getMatchingStacks();

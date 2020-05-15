@@ -10,6 +10,8 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class S2CTaskCheckPacket extends Packet {
@@ -19,14 +21,15 @@ public class S2CTaskCheckPacket extends Packet {
     public ResourceLocation book;
     public ResourceLocation entry;
     public int id;
-
-    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int id, boolean hide, boolean lock) {
+    public List<Boolean> reward;
+    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int id, boolean hide, boolean lock, List<Boolean> reward) {
         this.book = book;
         this.entry = entry;
         this.ok = ok;
         this.id = id;
         this.hide = hide;
         this.lock = lock;
+        this.reward = reward;
     }
 
     public static class Handler extends PacketHandler<S2CTaskCheckPacket> {
@@ -39,6 +42,10 @@ public class S2CTaskCheckPacket extends Packet {
             buffer.writeInt(msg.id);
             buffer.writeBoolean(msg.hide);
             buffer.writeBoolean(msg.lock);
+            buffer.writeInt(msg.reward.size());
+            for (boolean i : msg.reward){
+                buffer.writeBoolean(i);
+            }
         }
 
         @Override
@@ -49,7 +56,12 @@ public class S2CTaskCheckPacket extends Packet {
             int page = buffer.readInt();
             boolean hide = buffer.readBoolean();
             boolean lock = buffer.readBoolean();
-            return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock);
+            int num = buffer.readInt();
+            List<Boolean> list = new ArrayList<>();
+            for (int i = 0;i<num;i++){
+                list.add(buffer.readBoolean());
+            }
+            return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock,list);
         }
 
         @Override
@@ -61,6 +73,7 @@ public class S2CTaskCheckPacket extends Packet {
                     ((BaseTaskPage) i).stats = message.ok ? 1 : -1;
                     ((BaseTaskPage) i).lock = message.lock;
                     ((BaseTaskPage) i).hide = message.hide;
+                    ((BaseTaskPage) i).reward_stats = message.reward;
                 }
             });
             ctx.get().setPacketHandled(true);

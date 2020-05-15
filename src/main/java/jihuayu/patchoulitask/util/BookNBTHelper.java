@@ -16,7 +16,15 @@ public class BookNBTHelper {
     public static ListNBT getTaskNum(PlayerEntity playerEntity, String book, String entry, int page){
         return NBTHelper.of(playerEntity.getPersistentData()).getTagList(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),NBTHelper.NBT.INT);
     }
-
+    public static int getTaskNum(PlayerEntity playerEntity, String book, String entry, int page,int index){
+        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.num.%d", book, entry, page,index),0);
+    }
+    public static ListNBT getRewardStats(PlayerEntity playerEntity, String book, String entry, int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).getTagList(String.format("patchouliquests.%s.%s.%d.reward", book, entry, page),NBTHelper.NBT.BYTE);
+    }
+    public static boolean getRewardStats(PlayerEntity playerEntity, String book, String entry ,int page,int index){
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.reward.%d", book, entry, page,index),false);
+    }
     public static boolean isLock(PlayerEntity playerEntity, String book, String entry,int page){
         return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.lock", book, entry, page),false);
     }
@@ -38,6 +46,19 @@ public class BookNBTHelper {
     public static void setTaskNum(PlayerEntity playerEntity, String book, String entry, int page,ListNBT list){
         NBTHelper.of(playerEntity.getPersistentData()).setTag(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),list);
     }
+
+    public static void setTaskNum(PlayerEntity playerEntity, String book, String entry, int page,int index,boolean ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.num.%d", book, entry, page,index),ok);
+    }
+
+    public static void setRewardStats(PlayerEntity playerEntity, String book, String entry, int page,ListNBT list){
+        NBTHelper.of(playerEntity.getPersistentData()).setTag(String.format("patchouliquests.%s.%s.%d.reward", book, entry, page),list);
+    }
+
+    public static void setRewardStats(PlayerEntity playerEntity, String book, String entry, int page,int index,boolean ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.reward.%d", book, entry, page,index),ok);
+    }
+
 
     public static void setLock(PlayerEntity playerEntity, String book, String entry,int page,boolean ok){
         NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.lock", book, entry, page),ok);
