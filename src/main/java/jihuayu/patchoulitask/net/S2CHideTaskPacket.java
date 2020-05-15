@@ -50,9 +50,7 @@ public class S2CHideTaskPacket extends Packet {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
-                System.out.println(i);
                 if (i instanceof BaseTaskPage) {
-                    System.out.println(i);
                     ((BaseTaskPage) i).hide = message.hide;
                 }
             });

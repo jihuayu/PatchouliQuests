@@ -28,11 +28,8 @@ import static jihuayu.patchoulitask.comand.arguments.TSuggestionProviders.AVAILA
 public class LockAndHideCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> builder = Commands.literal("pt");
-        register2(builder);
         LiteralArgumentBuilder<CommandSource> builder1 = Commands.literal("patchouli_quests");
         register2(builder1);
-        dispatcher.register(builder);
         dispatcher.register(builder1);
 
     }
@@ -87,14 +84,11 @@ public class LockAndHideCommand {
 
     public static int hide(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int page, CommandContext<CommandSource> source, boolean hide) throws CommandSyntaxException {
         try {
-            System.out.println(1111);
             if (player instanceof ServerPlayerEntity) {
                 BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(page);
-                System.out.println(page1);
                 if (page1 instanceof BaseTaskPage) {
                     if (BookNBTHelper.isHide(player, book.toString(), entry.toString(), page) != hide) {
                         BookNBTHelper.setHide(player, book.toString(), entry.toString(), page, hide);
-                        System.out.println(hide);
                         new S2CHideTaskPacket(book, entry, page, hide).send((ServerPlayerEntity) player);
                     }
                 }

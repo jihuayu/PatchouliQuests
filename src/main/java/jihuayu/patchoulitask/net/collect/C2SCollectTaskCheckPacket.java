@@ -101,7 +101,6 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                         for (ItemStack out : ((CollectTaskPage) i).reward) {
                             player.addItemStackToInventory(out.copy());
                         }
-                        System.out.println(((CollectTaskPage) i).finishCmd);
                         if (!((CollectTaskPage) i).finishCmd.isEmpty()) {
                             for (String pp : ((CollectTaskPage) i).finishCmd) {
                                 try {
