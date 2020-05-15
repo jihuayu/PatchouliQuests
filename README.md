@@ -12,7 +12,8 @@ Patchouli Quests Book.
     "consume": false,
     "reward": ["minecraft:apple#4"],
     "hide": true,
-    "lock": true
+    "lock": true,
+    "id": 1
 }
 ```
 
@@ -26,7 +27,8 @@ Patchouli Quests Book.
     "finish_cmd": [],
     "reward": ["minecraft:apple#4"],
     "hide": true,
-    "lock": true
+    "lock": true,
+    "id": 1
 }
 ```
 
