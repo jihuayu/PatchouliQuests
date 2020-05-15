@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -48,10 +49,10 @@ public class S2CHideTaskPacket extends Packet {
         public void handle(S2CHideTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                ServerPlayerEntity player = ctx.get().getSender();
-                if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
+                System.out.println(i);
                 if (i instanceof BaseTaskPage) {
+                    System.out.println(i);
                     ((BaseTaskPage) i).hide = message.hide;
                 }
             });

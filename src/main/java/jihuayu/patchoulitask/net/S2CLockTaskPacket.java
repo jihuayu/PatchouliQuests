@@ -50,8 +50,6 @@ public class S2CLockTaskPacket extends Packet {
         public void handle(S2CLockTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                ServerPlayerEntity player = ctx.get().getSender();
-                if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).lock = message.lock;

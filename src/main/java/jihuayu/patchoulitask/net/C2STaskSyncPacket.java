@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
+import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -51,6 +52,12 @@ public class C2STaskSyncPacket extends ClientPacket {
                 if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
+                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.page)){
+                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).hide);
+                    }
+                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.page)){
+                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).lock);
+                    }
                     boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.page);
                     boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
                     boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);

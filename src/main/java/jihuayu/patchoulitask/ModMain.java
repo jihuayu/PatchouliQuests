@@ -1,6 +1,7 @@
 package jihuayu.patchoulitask;
 
 import com.mojang.brigadier.CommandDispatcher;
+import jihuayu.patchoulitask.comand.LockAndHideCommand;
 import jihuayu.patchoulitask.net.*;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
@@ -40,5 +41,6 @@ public class ModMain {
     @SubscribeEvent
     protected static void serverInit(FMLServerStartingEvent event) {
         COMMANDS = event.getCommandDispatcher();
+        LockAndHideCommand.register(COMMANDS);
     }
 }

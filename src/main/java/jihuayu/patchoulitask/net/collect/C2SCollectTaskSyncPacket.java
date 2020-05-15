@@ -2,6 +2,8 @@ package jihuayu.patchoulitask.net.collect;
 
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
+import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.*;
@@ -52,6 +54,12 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                 if (player == null) return;
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
+                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.page)){
+                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).hide);
+                    }
+                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.page)){
+                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).lock);
+                    }
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
                     boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over",message.book.toString(),message.entry.toString(),message.page));
@@ -63,7 +71,9 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                             list.add(((IntNBT) k).getInt());
                         }
                     }
-                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.page,list).send(player);
+                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
+                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
+                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.page,list,hide,lock).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

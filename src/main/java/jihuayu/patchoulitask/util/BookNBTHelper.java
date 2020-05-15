@@ -20,7 +20,13 @@ public class BookNBTHelper {
     public static boolean isHide(PlayerEntity playerEntity, String book, String entry,int page){
         return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.hide", book, entry, page),false);
     }
+    public static boolean hasLock(PlayerEntity playerEntity, String book, String entry,int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).hasTag(String.format("patchouliquests.%s.%s.%d.lock", book, entry, page),NBTHelper.NBT.BYTE);
+    }
 
+    public static boolean hasHide(PlayerEntity playerEntity, String book, String entry,int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).hasTag(String.format("patchouliquests.%s.%s.%d.hide", book, entry, page),NBTHelper.NBT.BYTE);
+    }
     public static void setOver(PlayerEntity playerEntity, String book, String entry,int page,boolean ok){
         NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.over", book, entry, page),ok);
     }

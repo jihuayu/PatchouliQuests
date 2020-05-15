@@ -17,8 +17,8 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
 
     public List<Integer> task_num;
 
-    public S2CCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page,List<Integer> task_num ) {
-        super(book, entry, ok, page);
+    public S2CCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page,List<Integer> task_num,boolean hide,boolean lock ) {
+        super(book, entry, ok, page,hide,lock);
         this.task_num = task_num;
     }
 
@@ -34,6 +34,8 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
             for (int i : msg.task_num){
                 buffer.writeInt(i);
             }
+            buffer.writeBoolean(msg.hide);
+            buffer.writeBoolean(msg.lock);
         }
 
         @Override
@@ -47,8 +49,9 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
             for (int i = 0 ;i< size;i++){
                 list.add(buffer.readInt());
             }
-
-            return new S2CCollectTaskCheckPacket(book, entry, ok, page,list);
+            boolean hide = buffer.readBoolean();
+            boolean lock = buffer.readBoolean();
+            return new S2CCollectTaskCheckPacket(book, entry, ok, page,list,hide,lock);
         }
 
         @Override
