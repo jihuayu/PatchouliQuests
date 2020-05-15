@@ -7,7 +7,7 @@ Patchouli Quests Book.
 ```json5
 {
     "type": "collect_task",
-    "collect": {"tag:minecraft:planks": 3},
+    "collect": {"tag:minecraft:planks": 3,"minecraft:apple": 10},
     "finish_cmd": ["kill @a"],
     "consume": false,
     "reward": ["minecraft:apple#4"],
