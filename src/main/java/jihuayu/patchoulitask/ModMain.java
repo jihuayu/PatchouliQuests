@@ -8,6 +8,7 @@ import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.S2CCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.task.NearPositionTaskPage;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,7 @@ public class ModMain {
     public static CommandDispatcher<CommandSource> COMMANDS;
     static {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put("near_position_task", NearPositionTaskPage.class);
     }
 
     public ModMain() {

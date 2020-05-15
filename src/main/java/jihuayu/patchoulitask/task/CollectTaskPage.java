@@ -45,7 +45,7 @@ public class CollectTaskPage extends BaseTaskPage {
             items_num.add(0);
         }
         if (stats==0){
-            new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
+            new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
 
@@ -80,7 +80,7 @@ public class CollectTaskPage extends BaseTaskPage {
     @Override
     protected boolean questButtonClicked1(Button button) {
         if (super.questButtonClicked1(button))return false;
-        new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
+        new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         return true;
     }
 

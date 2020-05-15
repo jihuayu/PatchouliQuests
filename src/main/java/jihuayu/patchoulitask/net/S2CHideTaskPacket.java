@@ -2,8 +2,7 @@ package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -16,13 +15,13 @@ import java.util.function.Supplier;
 public class S2CHideTaskPacket extends Packet {
     ResourceLocation book;
     ResourceLocation entry;
-    int page;
+    int id;
     boolean hide;
 
-    public S2CHideTaskPacket(ResourceLocation book, ResourceLocation entry, int page, boolean hide) {
+    public S2CHideTaskPacket(ResourceLocation book, ResourceLocation entry, int id, boolean hide) {
         this.book = book;
         this.entry = entry;
-        this.page = page;
+        this.id = id;
         this.hide = hide;
     }
 
@@ -32,7 +31,7 @@ public class S2CHideTaskPacket extends Packet {
         public void encode(S2CHideTaskPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.page);
+            buffer.writeInt(msg.id);
             buffer.writeBoolean(msg.hide);
         }
 
@@ -49,7 +48,7 @@ public class S2CHideTaskPacket extends Packet {
         public void handle(S2CHideTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).hide = message.hide;
                 }

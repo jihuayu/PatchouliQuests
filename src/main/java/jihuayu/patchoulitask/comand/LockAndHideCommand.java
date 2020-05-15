@@ -40,39 +40,39 @@ public class LockAndHideCommand {
                 }).then(Commands.argument("player", EntityArgument.players())
                 .then(Commands.argument("book", ResourceLocationArgument.resourceLocation()).suggests(AVAILABLE_BOOKS)
                         .then(Commands.argument("entry", ResourceLocationArgument.resourceLocation()).suggests(AVAILABLE_ENTRIES)
-                                .then(Commands.argument("page", IntegerArgumentType.integer(0))
+                                .then(Commands.argument("id", IntegerArgumentType.integer(0))
                                         .then(Commands.literal("lock").executes((ctx) -> {
                                             return lock(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
                                                     ResourceLocationArgument.getResourceLocation(ctx, "entry"),
-                                                    IntegerArgumentType.getInteger(ctx, "page"), ctx, true);
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, true);
                                         }))
                                         .then(Commands.literal("un_lock").executes((ctx) -> {
                                             return lock(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
                                                     ResourceLocationArgument.getResourceLocation(ctx, "entry"),
-                                                    IntegerArgumentType.getInteger(ctx, "page"), ctx, false);
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, false);
                                         }))
                                         .then(Commands.literal("hide").executes((ctx) -> {
                                             return hide(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
                                                     ResourceLocationArgument.getResourceLocation(ctx, "entry"),
-                                                    IntegerArgumentType.getInteger(ctx, "page"), ctx, true);
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, true);
                                         }))
                                         .then(Commands.literal("un_hide").executes((ctx) -> {
                                             return hide(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
                                                     ResourceLocationArgument.getResourceLocation(ctx, "entry"),
-                                                    IntegerArgumentType.getInteger(ctx, "page"), ctx, false);
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, false);
                                         }))
 
                         )))));
     }
 
-    public static int lock(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int page, CommandContext<CommandSource> source, boolean lock) throws CommandSyntaxException {
+    public static int lock(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean lock) throws CommandSyntaxException {
         try {
             if (player instanceof ServerPlayerEntity) {
-                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(page);
+                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(id);
                 if (page1 instanceof BaseTaskPage) {
-                    if (BookNBTHelper.isLock(player, book.toString(), entry.toString(), page) != lock) {
-                        BookNBTHelper.setLock(player, book.toString(), entry.toString(), page, lock);
-                        new S2CLockTaskPacket(book, entry, page, lock).send((ServerPlayerEntity) player);
+                    if (BookNBTHelper.isLock(player, book.toString(), entry.toString(), id) != lock) {
+                        BookNBTHelper.setLock(player, book.toString(), entry.toString(), id, lock);
+                        new S2CLockTaskPacket(book, entry, id, lock).send((ServerPlayerEntity) player);
                     }
                 }
             }
@@ -82,14 +82,14 @@ public class LockAndHideCommand {
         return 0;
     }
 
-    public static int hide(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int page, CommandContext<CommandSource> source, boolean hide) throws CommandSyntaxException {
+    public static int hide(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean hide) throws CommandSyntaxException {
         try {
             if (player instanceof ServerPlayerEntity) {
-                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(page);
+                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(id);
                 if (page1 instanceof BaseTaskPage) {
-                    if (BookNBTHelper.isHide(player, book.toString(), entry.toString(), page) != hide) {
-                        BookNBTHelper.setHide(player, book.toString(), entry.toString(), page, hide);
-                        new S2CHideTaskPacket(book, entry, page, hide).send((ServerPlayerEntity) player);
+                    if (BookNBTHelper.isHide(player, book.toString(), entry.toString(), id) != hide) {
+                        BookNBTHelper.setHide(player, book.toString(), entry.toString(), id, hide);
+                        new S2CHideTaskPacket(book, entry, id, hide).send((ServerPlayerEntity) player);
                     }
                 }
             }

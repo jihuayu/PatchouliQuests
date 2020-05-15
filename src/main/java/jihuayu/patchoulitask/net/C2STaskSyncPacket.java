@@ -4,9 +4,7 @@ import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
-import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -19,12 +17,12 @@ import java.util.function.Supplier;
 public class C2STaskSyncPacket extends ClientPacket {
     ResourceLocation book;
     ResourceLocation entry;
-    int page;
+    int id;
 
-    public C2STaskSyncPacket(ResourceLocation book, ResourceLocation entry, int page) {
+    public C2STaskSyncPacket(ResourceLocation book, ResourceLocation entry, int id) {
         this.book = book;
         this.entry = entry;
-        this.page = page;
+        this.id = id;
     }
 
     public static class Handler extends PacketHandler<C2STaskSyncPacket> {
@@ -33,7 +31,7 @@ public class C2STaskSyncPacket extends ClientPacket {
         public void encode(C2STaskSyncPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.page);
+            buffer.writeInt(msg.id);
         }
 
         @Override
@@ -50,18 +48,18 @@ public class C2STaskSyncPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
-                if (i instanceof BaseTaskPage) {
-                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.page)){
-                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).hide);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                if (i != null) {
+                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
+                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).hide);
                     }
-                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.page)){
-                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).lock);
+                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.id)){
+                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).lock);
                     }
-                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.page);
-                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
-                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
-                    new S2CTaskCheckPacket(message.book,message.entry,over,message.page,hide,lock).send(player);
+                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.id);
+                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
+                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
+                    new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

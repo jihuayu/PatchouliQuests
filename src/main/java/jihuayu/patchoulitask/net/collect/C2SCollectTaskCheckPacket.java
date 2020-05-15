@@ -10,7 +10,6 @@ import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.CheckUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,12 +33,12 @@ import java.util.function.Supplier;
 public class C2SCollectTaskCheckPacket extends ClientPacket {
     ResourceLocation book;
     ResourceLocation entry;
-    int page;
+    int id;
 
-    public C2SCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, int page) {
+    public C2SCollectTaskCheckPacket(ResourceLocation book, ResourceLocation entry, int id) {
         this.book = book;
         this.entry = entry;
-        this.page = page;
+        this.id = id;
     }
 
     public static class Handler extends PacketHandler<C2SCollectTaskCheckPacket> {
@@ -48,7 +47,7 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
         public void encode(C2SCollectTaskCheckPacket msg, PacketBuffer buffer) {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.page);
+            buffer.writeInt(msg.id);
         }
 
         @Override
@@ -65,24 +64,22 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
                 if (i instanceof CollectTaskPage) {
-                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.page)){
-                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).hide);
+                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
+                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).hide);
                     }
-                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.page)){
-                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.page,((CollectTaskPage) i).lock);
+                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.id)){
+                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).lock);
                     }
-                    CompoundNBT n = player.getPersistentData();
-                    NBTHelper nbt = NBTHelper.of(n);
-                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.page);
+                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.id);
                     if (over) {
-                        boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
-                        boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
-                        new S2CTaskCheckPacket(message.book,message.entry,over,message.page,hide,lock).send(player);
+                        boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
+                        boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock).send(player);
                         return;
                     }
-                    ListNBT l = BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.page);
+                    ListNBT l = BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.id);
                     List<Integer> list = new ArrayList<>();
                     if (l == null) {
                         l = new ListNBT();
@@ -96,7 +93,7 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                         }
                     }
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), ((CollectTaskPage) i).consume, list);
-                    BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.page,t);
+                    BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.id,t);
                     if (t) {
                         for (ItemStack out : ((CollectTaskPage) i).reward) {
                             player.addItemStackToInventory(out.copy());
@@ -114,17 +111,17 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
 
                         }
                     }
-                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
-                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
+                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
+                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
                     if (((CollectTaskPage) i).consume) {
                         for (int num = 0; num < list.size(); num++) {
                             l.set(num, IntNBT.valueOf(list.get(num)));
                         }
-                        BookNBTHelper.setTaskNum(player,message.book.toString(),message.entry.toString(),message.page,l);
-                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.page, list,hide,lock).send(player);
+                        BookNBTHelper.setTaskNum(player,message.book.toString(),message.entry.toString(),message.id,l);
+                        new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.id, list,hide,lock).send(player);
                     } else {
 
-                        new S2CTaskCheckPacket(message.book,message.entry,over,message.page,hide,lock).send(player);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock).send(player);
                     }
 
                 }

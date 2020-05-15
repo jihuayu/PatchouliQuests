@@ -1,6 +1,5 @@
 package jihuayu.patchoulitask.task;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
@@ -37,6 +36,8 @@ public class BaseTaskPage extends PageQuest {
     public boolean hide = false;
     @SerializedName("lock")
     public boolean lock = false;
+    @SerializedName("id")
+    public Integer id;
 
     @Override
     public void build(BookEntry entry, int pageNum) {
@@ -48,6 +49,10 @@ public class BaseTaskPage extends PageQuest {
         }
         if (finishCmd == null)
             finishCmd = new ArrayList<>();
+        if (id == null){
+            System.out.println(this);
+            id = pageNum;
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.net;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
+import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -17,13 +18,13 @@ public class S2CTaskCheckPacket extends Packet {
     public boolean lock;
     public ResourceLocation book;
     public ResourceLocation entry;
-    public int page;
+    public int id;
 
-    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page,boolean hide,boolean lock) {
+    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int id, boolean hide, boolean lock) {
         this.book = book;
         this.entry = entry;
         this.ok = ok;
-        this.page = page;
+        this.id = id;
         this.hide = hide;
         this.lock = lock;
     }
@@ -35,7 +36,7 @@ public class S2CTaskCheckPacket extends Packet {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
             buffer.writeBoolean(msg.ok);
-            buffer.writeInt(msg.page);
+            buffer.writeInt(msg.id);
             buffer.writeBoolean(msg.hide);
             buffer.writeBoolean(msg.lock);
         }
@@ -55,7 +56,7 @@ public class S2CTaskCheckPacket extends Packet {
         public void handle(S2CTaskCheckPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).stats = message.ok ? 1 : -1;
                     ((BaseTaskPage) i).lock = message.lock;

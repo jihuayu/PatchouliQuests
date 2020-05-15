@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.net.collect;
 
 import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -29,7 +30,7 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
             buffer.writeResourceLocation(msg.book);
             buffer.writeResourceLocation(msg.entry);
             buffer.writeBoolean(msg.ok);
-            buffer.writeInt(msg.page);
+            buffer.writeInt(msg.id);
             buffer.writeInt(msg.task_num.size());
             for (int i : msg.task_num){
                 buffer.writeInt(i);
@@ -58,7 +59,7 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
         public void handle(S2CCollectTaskCheckPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
                 if (i instanceof CollectTaskPage) {
                     ((CollectTaskPage) i).stats = message.ok ? 1 : -1;
                     for (int j =0;j<message.task_num.size();j++){

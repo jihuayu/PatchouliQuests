@@ -6,5 +6,10 @@
   "patchouliquests.tooltip.item.num": "Count:",
   "patchouliquests.tooltip.item.consume": "Will consume items.",
   "patchouliquests.task.lock": "Locked",
-  "patchouliquests.command.failed": "Command error!"
+  "patchouliquests.command.failed": "Command error!",
+  "patchouliquests.task.near_pos.intr": "Go to:",
+  "patchouliquests.task.near_pos.x": "X: %d",
+  "patchouliquests.task.near_pos.y": "Y: %d",
+  "patchouliquests.task.near_pos.z": "Z: %d",
+  "patchouliquests.task.near_pos.range": "Range: %d"
 }
