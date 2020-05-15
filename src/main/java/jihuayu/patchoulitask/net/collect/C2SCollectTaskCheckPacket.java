@@ -5,7 +5,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import jihuayu.patchoulitask.ModMain;
 import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
+import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.util.BookHelper;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.CheckUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
@@ -95,21 +97,7 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), ((CollectTaskPage) i).consume, list);
                     BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.id,t);
                     if (t) {
-                        for (ItemStack out : ((CollectTaskPage) i).reward) {
-                            player.addItemStackToInventory(out.copy());
-                        }
-                        if (!((CollectTaskPage) i).finishCmd.isEmpty()) {
-                            for (String pp : ((CollectTaskPage) i).finishCmd) {
-                                try {
-                                    ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ())
-                                            , player.getPitchYaw(),
-                                            (ServerWorld) player.world, 99, "", new StringTextComponent(""), player.server, player));
-                                } catch (CommandSyntaxException e) {
-                                    ModMain.LOGGER.error(String.format("command %s excute failed!", ((CollectTaskPage) i).finishCmd));
-                                }
-                            }
-
-                        }
+                        BookHelper.complete(player, (BaseTaskPage) i);
                     }
                     boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
                     boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);

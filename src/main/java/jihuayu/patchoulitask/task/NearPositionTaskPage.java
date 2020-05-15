@@ -1,15 +1,19 @@
 package jihuayu.patchoulitask.task;
 
+import jihuayu.patchoulitask.net.C2STaskSyncPacket;
+import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
+
 
 public class NearPositionTaskPage extends BaseTaskPage {
-    public transient List<ItemStack> reward = new ArrayList<>();
     public transient static final List<NearPositionTaskPage> POSES = new ArrayList<>();
 
     public int x;
@@ -22,7 +26,9 @@ public class NearPositionTaskPage extends BaseTaskPage {
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
         POSES.add(this);
-
+        if (stats==0){
+            new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
+        }
     }
 
     @Override
@@ -41,8 +47,8 @@ public class NearPositionTaskPage extends BaseTaskPage {
         parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.z",z),
                 fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.z",z)) / 2 + 12, recipeY - 6, book.textColor);
         recipeY+=10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.range",z),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.range",z)) / 2 + 12, recipeY - 6, book.textColor);
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.range",range),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.range",range)) / 2 + 12, recipeY - 6, book.textColor);
         return true;
     }
 }
