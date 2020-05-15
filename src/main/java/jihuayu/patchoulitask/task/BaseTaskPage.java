@@ -71,7 +71,12 @@ public class BaseTaskPage extends PageQuest {
     }
 
     public boolean isCompleted(Book book) {
-        return PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString());
+        try {
+            return PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString());
+
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public void renderItemStackAndNumAndJEI(int x, int y, int mouseX, int mouseY, ItemStack stack) {

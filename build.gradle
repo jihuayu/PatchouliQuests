@@ -19,7 +19,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.wynprice.cursemaven'
 
 
-version = '1.0'
+version = '1.3'
 group = 'jihuayu' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'PatchouliQuests-1.15.2'
 
@@ -132,8 +132,6 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
+        mavenLocal()
     }
 }

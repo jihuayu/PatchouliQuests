@@ -14,14 +14,10 @@ public class CheckUtil {
         List<Integer> item_num = new ArrayList<>();
         for (int j = 0; j < i.size(); j++) {
             item_num.clear();
-            System.out.println(num.get(j));
             for (int t = 0; t < stacks.size(); t++) {
                 item_num.add(0);
                 boolean ans = i.get(j).test(stacks.get(t));
                 if (ans) {
-                    System.out.println("-----------------------");
-                    System.out.println(num.get(j) );
-                    System.out.println("-----------------------");
                     if (num.get(j) < i.get(j).getMatchingStacks()[0].getCount()) {
                         if(item_num.get(t)<stacks.get(t).getCount()){
                             num.set(j, num.get(j) + 1);
@@ -35,8 +31,6 @@ public class CheckUtil {
                 }
             }
         }
-        System.out.println(ok_num);
-        System.out.println(i.size());
         if(consume){
             for (int j = 0; j < i.size(); j++) {
                 item_num.clear();

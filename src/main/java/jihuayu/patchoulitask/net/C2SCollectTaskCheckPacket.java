@@ -6,6 +6,8 @@ import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.CheckUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -87,8 +89,10 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                     }
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), message.consume, list);
                     nbt.setBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page), t);
-                    for (ItemStack out : ((CollectTaskPage) i).reward){
-                        player.addItemStackToInventory(out.copy());
+                    if(t){
+                        for (ItemStack out : ((CollectTaskPage) i).reward){
+                            player.addItemStackToInventory(out.copy());
+                        }
                     }
                     if (message.consume) {
                         for (int num = 0;num < list.size();num++) {

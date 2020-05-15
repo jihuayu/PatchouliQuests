@@ -21,7 +21,9 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 
@@ -31,7 +33,7 @@ public class CollectTaskPage extends BaseTaskPage {
     public transient List<Integer> items_num = new ArrayList<>();
 
     @SerializedName("collect")
-    List<String> itemsStr;
+    Map<String,Integer> itemsStr;
     @SerializedName("reward")
     List<String> rewardStr;
     @SerializedName("finish_cmd")
@@ -42,8 +44,13 @@ public class CollectTaskPage extends BaseTaskPage {
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
-        for (String i : itemsStr) {
-            items.add(ItemStackUtil.loadIngredientFromString(i));
+        for (String i : itemsStr.keySet()) {
+            Ingredient ii = ItemStackUtil.loadIngredientFromString(i);
+
+            for (ItemStack t :ii.getMatchingStacks()){
+                t.setCount(itemsStr.get(i));
+            }
+            items.add(ii);
             items_num.add(0);
         }
         for (String i : rewardStr) {
@@ -71,7 +78,7 @@ public class CollectTaskPage extends BaseTaskPage {
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need"), recipeX + 4, recipeY - 6, book.textColor);
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need"), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need"))/2+4, recipeY - 6, book.textColor);
         for (int i = 0; i < items.size(); i++) {
             RenderSystem.enableBlend();
             RenderSystem.color4f(1F, 1F, 1F, 1F);
@@ -81,7 +88,8 @@ public class CollectTaskPage extends BaseTaskPage {
                     items_num.get(i));
         }
         recipeY = GuiBook.PAGE_HEIGHT - ((int) Math.ceil(reward.size() * 1.0 / wrap)) * 24 - 12 - 25;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"), recipeX + 4, recipeY - 6, book.textColor);
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward"))/2+4, recipeY - 6, book.textColor);
         for (int i = 0; i < reward.size(); i++) {
             RenderSystem.enableBlend();
             RenderSystem.color4f(1F, 1F, 1F, 1F);
