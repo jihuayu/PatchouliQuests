@@ -4,5 +4,7 @@
   "patchouliquests.task.reward": "Reward:",
   "patchouliquests.task.need": "Need:",
   "patchouliquests.tooltip.item.num": "Count:",
-  "patchouliquests.tooltip.item.consume": "Will consume items."
+  "patchouliquests.tooltip.item.consume": "Will consume items.",
+  "patchouliquests.task.lock": "Locked",
+  "patchouliquests.command.failed": "Command error!"
 }

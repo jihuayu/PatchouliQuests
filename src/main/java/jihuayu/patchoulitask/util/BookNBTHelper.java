@@ -1,0 +1,39 @@
+package jihuayu.patchoulitask.util;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
+
+public class BookNBTHelper {
+    public static boolean isOver(PlayerEntity playerEntity, String book, String entry,int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.over", book, entry, page),false);
+    }
+
+    public static ListNBT getTaskNum(PlayerEntity playerEntity, String book, String entry, int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).getTagList(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),NBTHelper.NBT.INT);
+    }
+
+    public static boolean isLock(PlayerEntity playerEntity, String book, String entry,int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.lock", book, entry, page),false);
+    }
+
+    public static boolean isHide(PlayerEntity playerEntity, String book, String entry,int page){
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.hide", book, entry, page),false);
+    }
+
+    public static void setOver(PlayerEntity playerEntity, String book, String entry,int page,boolean ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.over", book, entry, page),ok);
+    }
+
+    public static void setTaskNum(PlayerEntity playerEntity, String book, String entry, int page,ListNBT list){
+        NBTHelper.of(playerEntity.getPersistentData()).setTag(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),list);
+    }
+
+    public static void setLock(PlayerEntity playerEntity, String book, String entry,int page,boolean ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.lock", book, entry, page),ok);
+    }
+
+    public static void setHide(PlayerEntity playerEntity, String book, String entry,int page,boolean ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.hide", book, entry, page),ok);
+    }
+}

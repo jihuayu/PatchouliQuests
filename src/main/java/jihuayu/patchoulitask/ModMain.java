@@ -34,6 +34,8 @@ public class ModMain {
         NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
         NetworkChannel.register(C2SCollectTaskSyncPacket.class, new C2SCollectTaskSyncPacket.Handler());
         NetworkChannel.register(S2CCollectTaskCheckPacket.class, new S2CCollectTaskCheckPacket.Handler());
+        NetworkChannel.register(S2CLockTaskPacket.class, new S2CLockTaskPacket.Handler());
+        NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
     }
     @SubscribeEvent
     protected static void serverInit(FMLServerStartingEvent event) {

@@ -26,12 +26,17 @@ import java.util.List;
 
 public class BaseTaskPage extends PageQuest {
     public transient int stats = 0;
+    public transient boolean is_hide = false;
     public transient List<ItemStack> reward = new ArrayList<>();
     Button button;
     @SerializedName("finish_cmd")
     public List<String> finishCmd;
     @SerializedName("reward")
     List<String> rewardStr;
+    @SerializedName("hide")
+    public boolean hide = false;
+    @SerializedName("lock")
+    public boolean lock = false;
 
     @Override
     public void build(BookEntry entry, int pageNum) {
@@ -53,13 +58,23 @@ public class BaseTaskPage extends PageQuest {
         addButton(button);
         updateButtonText(button);
     }
-
     @Override
     public void render(int mouseX, int mouseY, float pticks) {
+        super.render(mouseX, mouseY, pticks);
+        render1(mouseX,mouseY,pticks);
+    }
+    public boolean render1(int mouseX, int mouseY, float pticks) {
+        if ((!is_hide)&&hide)
+            onHidden(parent);
+        if (hide){
+            return false;
+        }
+        if(is_hide)
+            addButton(button);
         updateButtonText(button);
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int wrap = GuiBook.PAGE_WIDTH / 24;
-        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil(reward.size() * 1.0 / wrap))+(finishCmd.isEmpty()?0:1)) * 24 - 12 - 25;
+        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size()+(finishCmd.isEmpty()?0:1)) * 1.0 / wrap))) * 24 - 12 - 25;
         if (reward.size()>0){
             parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"),
                     fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward"))/2+4, recipeY - 6, book.textColor);
@@ -78,10 +93,15 @@ public class BaseTaskPage extends PageQuest {
                 renderCommand(recipeX + (reward.size() % wrap) * 24 + 4, recipeY + (reward.size() / wrap) * 24 + 8, mouseX, mouseY,finishCmd);
             }
         }
-
+        return true;
+    }
+    @Override
+    protected void questButtonClicked(Button button) {
+        questButtonClicked1(button);
     }
 
-    protected void questButtonClicked(Button button) {
+    protected boolean questButtonClicked1(Button button) {
+        if (lock)return false;
         String res = entry.getId().toString();
         boolean task = true;
         for (BookPage i : entry.getPages()) {
@@ -102,9 +122,14 @@ public class BaseTaskPage extends PageQuest {
         PersistentData.save();
         updateButtonText(button);
         entry.markReadStateDirty();
+        return true;
     }
 
     public void updateButtonText(Button button) {
+        if (lock){
+            button.setMessage(I18n.format("patchouliquests.task.lock"));
+            return;
+        }
         String s = I18n.format(stats > 0 ? "patchouliquests.task.over" : "patchouliquests.task.submit");
         button.setMessage(s);
     }

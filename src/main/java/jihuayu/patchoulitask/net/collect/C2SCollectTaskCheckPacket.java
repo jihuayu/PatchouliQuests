@@ -6,6 +6,7 @@ import jihuayu.patchoulitask.ModMain;
 import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.CheckUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.command.CommandSource;
@@ -69,12 +70,14 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
 
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
-                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page));
+                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.page);
                     if (over) {
-                        new S2CTaskCheckPacket(message.book, message.entry, over, message.page).send(player);
+                        boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
+                        boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.page,hide,lock).send(player);
                         return;
                     }
-                    ListNBT l = nbt.getTagList(String.format("patchouliquests.%s.%s.%d.num", message.book.toString(), message.entry.toString(), message.page), NBTHelper.NBT.INT);
+                    ListNBT l = BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.page);
                     List<Integer> list = new ArrayList<>();
                     if (l == null) {
                         l = new ListNBT();
@@ -88,7 +91,7 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                         }
                     }
                     boolean t = CheckUtil.checkTask(((CollectTaskPage) i).items, player.container.getInventory(), ((CollectTaskPage) i).consume, list);
-                    nbt.setBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.page), t);
+                    BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.page,t);
                     if (t) {
                         for (ItemStack out : ((CollectTaskPage) i).reward) {
                             player.addItemStackToInventory(out.copy());
@@ -111,10 +114,12 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
                         for (int num = 0; num < list.size(); num++) {
                             l.set(num, IntNBT.valueOf(list.get(num)));
                         }
-                        nbt.setTag(String.format("patchouliquests.%s.%s.%d.num", message.book.toString(), message.entry.toString(), message.page), l);
+                        BookNBTHelper.setTaskNum(player,message.book.toString(),message.entry.toString(),message.page,l);
                         new S2CCollectTaskCheckPacket(message.book, message.entry, t, message.page, list).send(player);
                     } else {
-                        new S2CTaskCheckPacket(message.book, message.entry, t, message.page).send(player);
+                        boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.page);
+                        boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.page);
+                        new S2CTaskCheckPacket(message.book,message.entry,over,message.page,hide,lock).send(player);
                     }
 
                 }

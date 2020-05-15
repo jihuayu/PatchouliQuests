@@ -13,15 +13,19 @@ import java.util.function.Supplier;
 
 public class S2CTaskCheckPacket extends Packet {
     public boolean ok;
+    public boolean hide;
+    public boolean lock;
     public ResourceLocation book;
     public ResourceLocation entry;
     public int page;
 
-    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page) {
+    public S2CTaskCheckPacket(ResourceLocation book, ResourceLocation entry, boolean ok, int page,boolean hide,boolean lock) {
         this.book = book;
         this.entry = entry;
         this.ok = ok;
         this.page = page;
+        this.hide = hide;
+        this.lock = lock;
     }
 
     public static class Handler extends PacketHandler<S2CTaskCheckPacket> {
@@ -32,6 +36,8 @@ public class S2CTaskCheckPacket extends Packet {
             buffer.writeResourceLocation(msg.entry);
             buffer.writeBoolean(msg.ok);
             buffer.writeInt(msg.page);
+            buffer.writeBoolean(msg.hide);
+            buffer.writeBoolean(msg.lock);
         }
 
         @Override
@@ -40,7 +46,9 @@ public class S2CTaskCheckPacket extends Packet {
             ResourceLocation entry = buffer.readResourceLocation();
             boolean ok = buffer.readBoolean();
             int page = buffer.readInt();
-            return new S2CTaskCheckPacket(book, entry, ok, page);
+            boolean hide = buffer.readBoolean();
+            boolean lock = buffer.readBoolean();
+            return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock);
         }
 
         @Override
@@ -50,6 +58,8 @@ public class S2CTaskCheckPacket extends Packet {
                 BookPage i = book.contents.entries.get(message.entry).getPages().get(message.page);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).stats = message.ok ? 1 : -1;
+                    ((BaseTaskPage) i).lock = message.lock;
+                    ((BaseTaskPage) i).hide = message.hide;
                 }
             });
             ctx.get().setPacketHandled(true);

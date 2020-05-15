@@ -60,31 +60,32 @@ public class CollectTaskPage extends BaseTaskPage {
         return 10 + (4 + 8 + 24 * (items.size() / wrap + 1));
     }
 
-    @Override
-    public void render(int mouseX, int mouseY, float pticks) {
-        super.render(mouseX,mouseY,pticks);
+    public boolean render1(int mouseX, int mouseY, float pticks) {
+        if(!super.render1(mouseX,mouseY,pticks))return false;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
-        int recipeY = 10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need"), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need"))/2+4, recipeY - 6, book.textColor);
+        int recipeY = 25;
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need"), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need")) / 2 + 4, recipeY - 6, book.textColor);
         for (int i = 0; i < items.size(); i++) {
             RenderSystem.enableBlend();
             RenderSystem.color4f(1F, 1F, 1F, 1F);
             mc.textureManager.bindTexture(book.craftingTexture);
             AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
             renderIngredientAndNumAndJEIWithOver(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, items.get(i),
-                    consume?items_num.get(i):-1);
+                    consume ? items_num.get(i) : -1);
         }
         RenderHelper.disableStandardItemLighting();
-
+        return true;
     }
-
-    protected void questButtonClicked(Button button) {
+    @Override
+    protected boolean questButtonClicked1(Button button) {
+        if (super.questButtonClicked1(button))return false;
         new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.pageNum).send();
-        super.questButtonClicked(button);
+        return true;
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (hide)return false;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 10;
