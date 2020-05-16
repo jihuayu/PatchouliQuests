@@ -47,8 +47,8 @@ public class BookNBTHelper {
         NBTHelper.of(playerEntity.getPersistentData()).setTag(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),list);
     }
 
-    public static void setTaskNum(PlayerEntity playerEntity, String book, String entry, int page,int index,boolean ok){
-        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.num.%d", book, entry, page,index),ok);
+    public static void setTaskNum(PlayerEntity playerEntity, String book, String entry, int page,int index,int ok){
+        NBTHelper.of(playerEntity.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.num.%d", book, entry, page,index),ok);
     }
 
     public static void setRewardStats(PlayerEntity playerEntity, String book, String entry, int page,ListNBT list){

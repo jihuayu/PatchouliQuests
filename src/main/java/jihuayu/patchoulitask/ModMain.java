@@ -10,8 +10,9 @@ import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.near.C2SNearPositionTaskCheckPacket;
 import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
-import jihuayu.patchoulitask.task.NearPositionTaskPage;
-import jihuayu.patchoulitask.task.NearStructTaskPage;
+import jihuayu.patchoulitask.task.kill.KillTypeTask;
+import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
+import jihuayu.patchoulitask.task.near.NearStructTaskPage;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,6 +33,7 @@ public class ModMain {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_position_task", NearPositionTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_struct_task", NearStructTaskPage.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put("kill_entity_task", KillTypeTask.class);
     }
 
     public ModMain() {

@@ -17,7 +17,7 @@ public class BookHelper {
         if (!(i).finishCmd.isEmpty()) {
             for (String pp : ( i).finishCmd) {
                 try {
-                    ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ())
+                    ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getX(), player.getY(), player.getZ())
                             , player.getPitchYaw(),
                             (ServerWorld) player.world, 99, "", new StringTextComponent(""), player.server, player));
                 } catch (CommandSyntaxException e) {

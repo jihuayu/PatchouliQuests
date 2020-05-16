@@ -1,9 +1,8 @@
-package jihuayu.patchoulitask.task;
+package jihuayu.patchoulitask.task.near;
 
 import jihuayu.patchoulitask.net.C2STaskSyncPacket;
-import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
+import jihuayu.patchoulitask.task.BaseTaskPage;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
 

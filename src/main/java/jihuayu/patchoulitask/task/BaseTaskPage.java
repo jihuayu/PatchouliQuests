@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.*;
+import org.lwjgl.glfw.GLFW;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -66,7 +67,7 @@ public class BaseTaskPage extends PageQuest {
         updateButtonText(button);
     }
     @Override
-    public void render(int mouseX, int mouseY, float pticks) {
+    final public void render(int mouseX, int mouseY, float pticks) {
         super.render(mouseX, mouseY, pticks);
         render1(mouseX,mouseY,pticks);
     }
@@ -106,19 +107,25 @@ public class BaseTaskPage extends PageQuest {
     protected void questButtonClicked(Button button) {
         questButtonClicked1(button);
     }
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (hide)return false;
-        if (stats<=0)return true;
+    final public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        return mouseClicked1(mouseX, mouseY, mouseButton) > 0;
+    }
+    public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
+        if (hide)return -1;
+        if (stats<=0)return 0;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size()+(finishCmd.isEmpty()?0:1)) * 1.0 / wrap))) * 24 - 12 - 25;
-        for (int i = 0; i < reward.size(); i++) {
-            if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
-                if (!reward_stats.get(i))
-                    new C2SRewardGetPacket(book.id,entry.getId(),id,i).send();
+        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_1){
+            for (int i = 0; i < reward.size(); i++) {
+                if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
+                    if (!reward_stats.get(i))
+                        new C2SRewardGetPacket(book.id,entry.getId(),id,i).send();
+                    return 1;
+                }
             }
         }
-        return true;
+        return -1;
     }
     protected boolean questButtonClicked1(Button button) {
         if (lock)return false;

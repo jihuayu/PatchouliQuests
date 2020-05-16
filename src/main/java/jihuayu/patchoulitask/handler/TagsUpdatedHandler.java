@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.handler;
 
-import jihuayu.patchoulitask.task.NearPositionTaskPage;
+import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

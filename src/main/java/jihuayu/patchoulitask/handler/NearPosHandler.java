@@ -1,7 +1,7 @@
 package jihuayu.patchoulitask.handler;
 
 import jihuayu.patchoulitask.net.near.C2SNearPositionTaskCheckPacket;
-import jihuayu.patchoulitask.task.NearPositionTaskPage;
+import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;

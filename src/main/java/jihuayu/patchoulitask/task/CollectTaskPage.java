@@ -84,8 +84,8 @@ public class CollectTaskPage extends BaseTaskPage {
         return true;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (!super.mouseClicked(mouseX,mouseY,mouseButton))return false;
+    public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
+        if (super.mouseClicked1(mouseX,mouseY,mouseButton)<0)return -1;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 25;
@@ -93,10 +93,10 @@ public class CollectTaskPage extends BaseTaskPage {
             if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
                 ItemStack[] stacks = items.get(i).getMatchingStacks();
                 JEIUtil.showRecipes(stacks[(parent.ticksInBook / 20) % stacks.length]);
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
 
 }

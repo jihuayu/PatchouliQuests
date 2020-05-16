@@ -53,7 +53,7 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
                 BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
-                if (i instanceof BaseTaskPage) {
+                if (i instanceof CollectTaskPage) {
                     if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
                         BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).hide);
                     }
@@ -63,13 +63,9 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
                     boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over",message.book.toString(),message.entry.toString(),message.id));
-                    ListNBT l = nbt.getTagList(String.format("patchouliquests.%s.%s.%d.num",message.book.toString(),message.entry.toString(),message.id), NBTHelper.NBT.INT);
                     List<Integer> list = new ArrayList<>();
-                    if (l!=null)
-                    for (INBT k : l){
-                        if (k instanceof IntNBT){
-                            list.add(((IntNBT) k).getInt());
-                        }
+                    for (int k = 0; k < ((CollectTaskPage) i).items.size();k++){
+                        list.add(BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.id,k));
                     }
                     boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
                     boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
