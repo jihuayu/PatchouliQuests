@@ -3,6 +3,7 @@ package jihuayu.patchoulitask.net;
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -40,54 +41,24 @@ public class S2CTaskCheckPacket extends Packet {
 
         @Override
         public void encode(S2CTaskCheckPacket msg, PacketBuffer buffer) {
-            if (!BOOK_LIST.contains(msg.book) || PALETTE_LIST.get(msg.book) == null || !PALETTE_LIST.get(msg.book).contains(msg.entry)) {
-                buffer.writeBoolean(false);
-                buffer.writeResourceLocation(msg.book);
-                buffer.writeResourceLocation(msg.entry);
-            } else {
-                buffer.writeBoolean(true);
-                buffer.writeVarInt(BOOK_LIST.indexOf(msg.book));
-                buffer.writeVarInt(PALETTE_LIST.get(msg.book).indexOf(msg.entry));
-            }
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
             buffer.writeBoolean(msg.ok);
-            buffer.writeInt(msg.id);
             buffer.writeBoolean(msg.hide);
             buffer.writeBoolean(msg.lock);
-            buffer.writeInt(msg.reward.size());
-            for (boolean i : msg.reward) {
-                buffer.writeBoolean(i);
-            }
+            BufferHelper.writeList(buffer,(i,j)->i.writeBoolean((boolean)j),msg.reward);
         }
 
         @Override
         public S2CTaskCheckPacket decode(PacketBuffer buffer) {
-            if (buffer.readBoolean()) {
-                ResourceLocation book = BOOK_LIST.get(buffer.readVarInt());
-                ResourceLocation entry = PALETTE_LIST.get(book).get(buffer.readVarInt());
+                BufferHelper.TaskRead tr = BufferHelper.readTaskId(buffer);
+                ResourceLocation book = tr.book;
+                ResourceLocation entry = tr.entry;
+                int id = tr.id;
                 boolean ok = buffer.readBoolean();
-                int page = buffer.readInt();
                 boolean hide = buffer.readBoolean();
                 boolean lock = buffer.readBoolean();
-                int num = buffer.readInt();
-                List<Boolean> list = new ArrayList<>();
-                for (int i = 0; i < num; i++) {
-                    list.add(buffer.readBoolean());
-                }
-                return new S2CTaskCheckPacket(book, entry, ok, page, hide, lock, list);
-            } else {
-                ResourceLocation book = buffer.readResourceLocation();
-                ResourceLocation entry = buffer.readResourceLocation();
-                boolean ok = buffer.readBoolean();
-                int page = buffer.readInt();
-                boolean hide = buffer.readBoolean();
-                boolean lock = buffer.readBoolean();
-                int num = buffer.readInt();
-                List<Boolean> list = new ArrayList<>();
-                for (int i = 0; i < num; i++) {
-                    list.add(buffer.readBoolean());
-                }
-                return new S2CTaskCheckPacket(book, entry, ok, page, hide, lock, list);
-            }
+                List<Boolean> list = BufferHelper.readList(buffer,(i,j)->j.add(i.readBoolean()),false);
+                return new S2CTaskCheckPacket(book, entry, ok, id, hide, lock, list);
 
         }
 

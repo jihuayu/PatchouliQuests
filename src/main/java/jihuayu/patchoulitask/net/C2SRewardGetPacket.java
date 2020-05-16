@@ -3,6 +3,7 @@ package jihuayu.patchoulitask.net;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -31,17 +32,16 @@ public class C2SRewardGetPacket extends ClientPacket {
 
         @Override
         public void encode(C2SRewardGetPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.id);
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
             buffer.writeInt(msg.index);
         }
 
         @Override
         public C2SRewardGetPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            int page = buffer.readInt();
+            BufferHelper.TaskRead i = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = i.book;
+            ResourceLocation entry = i.entry;
+            int page = i.id;
             int index = buffer.readInt();
             return new C2SRewardGetPacket(book, entry, page, index);
         }

@@ -3,6 +3,7 @@ package jihuayu.patchoulitask.net;
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -29,17 +30,17 @@ public class S2CHideTaskPacket extends Packet {
 
         @Override
         public void encode(S2CHideTaskPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.id);
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+
             buffer.writeBoolean(msg.hide);
         }
 
         @Override
         public S2CHideTaskPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            int page = buffer.readInt();
+            BufferHelper.TaskRead i = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = i.book;
+            ResourceLocation entry = i.entry;
+            int page = i.id;
             boolean lock = buffer.readBoolean();
             return new S2CHideTaskPacket(book, entry, page, lock);
         }

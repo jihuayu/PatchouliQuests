@@ -7,6 +7,7 @@ import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import jihuayu.patchoulitask.util.BookHelper;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -33,16 +34,16 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
 
         @Override
         public void encode(C2SNearPositionTaskCheckPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.id);
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+
         }
 
         @Override
         public C2SNearPositionTaskCheckPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            int page = buffer.readInt();
+            BufferHelper.TaskRead i = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = i.book;
+            ResourceLocation entry = i.entry;
+            int page = i.id;
             return new C2SNearPositionTaskCheckPacket(book, entry, page);
         }
 

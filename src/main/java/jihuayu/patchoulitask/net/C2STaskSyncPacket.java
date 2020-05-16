@@ -3,6 +3,7 @@ package jihuayu.patchoulitask.net;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -29,17 +30,15 @@ public class C2STaskSyncPacket extends ClientPacket {
 
         @Override
         public void encode(C2STaskSyncPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.id);
-
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
         }
 
         @Override
         public C2STaskSyncPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            int page = buffer.readInt();
+            BufferHelper.TaskRead i = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = i.book;
+            ResourceLocation entry = i.entry;
+            int page = i.id;
             return new C2STaskSyncPacket(book, entry, page);
         }
 

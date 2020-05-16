@@ -7,6 +7,7 @@ import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.BookHelper;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import jihuayu.patchoulitask.util.CheckUtil;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -35,16 +36,15 @@ public class C2SCollectTaskCheckPacket extends ClientPacket {
 
         @Override
         public void encode(C2SCollectTaskCheckPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
-            buffer.writeInt(msg.id);
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
         }
 
         @Override
         public C2SCollectTaskCheckPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            int page = buffer.readInt();
+            BufferHelper.TaskRead p = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = p.book;
+            ResourceLocation entry = p.entry;
+            int page = p.id;
             return new C2SCollectTaskCheckPacket(book, entry, page);
         }
 

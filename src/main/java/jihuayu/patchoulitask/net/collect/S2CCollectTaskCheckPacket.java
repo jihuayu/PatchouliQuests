@@ -4,6 +4,7 @@ import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -28,10 +29,8 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
 
         @Override
         public void encode(S2CCollectTaskCheckPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
+            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
             buffer.writeBoolean(msg.ok);
-            buffer.writeInt(msg.id);
             buffer.writeInt(msg.task_num.size());
             for (int i : msg.task_num) {
                 buffer.writeInt(i);
@@ -46,10 +45,11 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
 
         @Override
         public S2CCollectTaskCheckPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
+            BufferHelper.TaskRead p = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = p.book;
+            ResourceLocation entry = p.entry;
+            int page = p.id;
             boolean ok = buffer.readBoolean();
-            int page = buffer.readInt();
             int size = buffer.readInt();
             List<Integer> list = new ArrayList<>();
             for (int i = 0; i < size; i++) {
