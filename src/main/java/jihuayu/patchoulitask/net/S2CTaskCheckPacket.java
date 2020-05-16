@@ -11,12 +11,8 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
-import static jihuayu.patchoulitask.util.PaletteHelper.BOOK_LIST;
-import static jihuayu.patchoulitask.util.PaletteHelper.PALETTE_LIST;
 
 public class S2CTaskCheckPacket extends Packet {
     public boolean ok;
@@ -41,24 +37,24 @@ public class S2CTaskCheckPacket extends Packet {
 
         @Override
         public void encode(S2CTaskCheckPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
             buffer.writeBoolean(msg.ok);
             buffer.writeBoolean(msg.hide);
             buffer.writeBoolean(msg.lock);
-            BufferHelper.writeList(buffer,(i,j)->i.writeBoolean((boolean)j),msg.reward);
+            BufferHelper.writeList(buffer, (i, j) -> i.writeBoolean((boolean) j), msg.reward);
         }
 
         @Override
         public S2CTaskCheckPacket decode(PacketBuffer buffer) {
-                BufferHelper.TaskRead tr = BufferHelper.readTaskId(buffer);
-                ResourceLocation book = tr.book;
-                ResourceLocation entry = tr.entry;
-                int id = tr.id;
-                boolean ok = buffer.readBoolean();
-                boolean hide = buffer.readBoolean();
-                boolean lock = buffer.readBoolean();
-                List<Boolean> list = BufferHelper.readList(buffer,(i,j)->j.add(i.readBoolean()),false);
-                return new S2CTaskCheckPacket(book, entry, ok, id, hide, lock, list);
+            BufferHelper.TaskRead tr = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = tr.book;
+            ResourceLocation entry = tr.entry;
+            int id = tr.id;
+            boolean ok = buffer.readBoolean();
+            boolean hide = buffer.readBoolean();
+            boolean lock = buffer.readBoolean();
+            List<Boolean> list = BufferHelper.readList(buffer, (i, j) -> j.add(i.readBoolean()), false);
+            return new S2CTaskCheckPacket(book, entry, ok, id, hide, lock, list);
 
         }
 

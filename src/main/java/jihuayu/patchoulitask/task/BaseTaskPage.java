@@ -42,7 +42,7 @@ public class BaseTaskPage extends PageQuest {
     @SerializedName("reward")
     List<String> rewardStr;
 
-    public  BookEntry getEntry(){
+    public BookEntry getEntry() {
         return entry;
     }
 

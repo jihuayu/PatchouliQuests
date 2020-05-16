@@ -3,14 +3,11 @@ package jihuayu.patchoulitask.task.near;
 import jihuayu.patchoulitask.net.C2STaskSyncPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 
 
 public class NearStructTaskPage extends BaseTaskPage {

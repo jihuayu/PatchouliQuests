@@ -34,7 +34,7 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
 
         @Override
         public void encode(C2SNearPositionTaskCheckPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
 
         }
 

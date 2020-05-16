@@ -26,6 +26,7 @@ public class NBTHelper {
     private final ItemStack stack;
     @Nullable
     private CompoundNBT tag;
+
     private NBTHelper(@Nullable CompoundNBT tag, @Nullable ItemStack stack) {
         this.stack = stack;
         this.tag = tag;

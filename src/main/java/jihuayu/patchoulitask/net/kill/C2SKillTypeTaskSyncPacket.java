@@ -1,6 +1,5 @@
 package jihuayu.patchoulitask.net.kill;
 
-import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
@@ -31,7 +30,7 @@ public class C2SKillTypeTaskSyncPacket extends ClientPacket {
 
         @Override
         public void encode(C2SKillTypeTaskSyncPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
         }
 
         @Override
@@ -65,7 +64,7 @@ public class C2SKillTypeTaskSyncPacket extends ClientPacket {
                         list.add(BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, j));
                     }
                     int num = BookNBTHelper.getKillNum(player, message.book.toString(), message.entry.toString(), message.id);
-                    new S2CKillTypeTaskCheckPacket(message.book, message.entry, message.id,over, hide, lock, list,num).send(player);
+                    new S2CKillTypeTaskCheckPacket(message.book, message.entry, message.id, over, hide, lock, list, num).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

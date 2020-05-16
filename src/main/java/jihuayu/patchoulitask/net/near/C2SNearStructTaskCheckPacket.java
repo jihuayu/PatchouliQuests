@@ -36,7 +36,7 @@ public class C2SNearStructTaskCheckPacket extends ClientPacket {
 
         @Override
         public void encode(C2SNearStructTaskCheckPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
 
         }
 

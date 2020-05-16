@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.ModMain;
 import jihuayu.patchoulitask.net.kill.C2SKillTypeTaskSyncPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
-import jihuayu.patchoulitask.task.near.NearBlockTaskPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
@@ -33,17 +32,16 @@ public class KillTypeTask extends BaseTaskPage {
     public transient Function<World, Entity> creator;
     public transient float renderScale, offset;
     public transient boolean errored;
+    @SerializedName("num")
+    public int num;
+    public transient int now_num;
+    public String name;
     float scale = 0.9F;
     @SerializedName("offset")
     float extraOffset = -0F;
     @SerializedName("default_rotation")
     float defaultRotation = -45f;
-    @SerializedName("num")
-    public int num;
-    public transient int now_num;
     boolean rotate = true;
-
-    public String name;
 
     public static void renderEntity(Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
         entity.world = world;
@@ -113,7 +111,7 @@ public class KillTypeTask extends BaseTaskPage {
         super.onDisplayed(parent, left, top);
 
         loadEntity(parent.getMinecraft().world);
-        if (stats==0){
+        if (stats == 0) {
             new C2SKillTypeTaskSyncPacket(book.id, this.entry.getId(), this.id).send();
         }
     }

@@ -30,7 +30,7 @@ public class S2CLockTaskPacket extends Packet {
 
         @Override
         public void encode(S2CLockTaskPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
             buffer.writeBoolean(msg.lock);
         }
 

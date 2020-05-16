@@ -78,7 +78,7 @@ public class BookNBTHelper {
     }
 
     public static int getKillNum(PlayerEntity playerEntity, String book, String entry, int page) {
-        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),0);
+        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.num", book, entry, page), 0);
     }
 
     public static BookPage getPage(List<BookPage> pages, int id) {

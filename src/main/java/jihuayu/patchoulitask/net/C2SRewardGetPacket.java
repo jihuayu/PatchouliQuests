@@ -32,7 +32,7 @@ public class C2SRewardGetPacket extends ClientPacket {
 
         @Override
         public void encode(C2SRewardGetPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
             buffer.writeInt(msg.index);
         }
 

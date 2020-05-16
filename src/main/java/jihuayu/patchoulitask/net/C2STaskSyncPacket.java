@@ -30,7 +30,7 @@ public class C2STaskSyncPacket extends ClientPacket {
 
         @Override
         public void encode(C2STaskSyncPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
         }
 
         @Override

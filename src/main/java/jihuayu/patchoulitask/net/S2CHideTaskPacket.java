@@ -30,7 +30,7 @@ public class S2CHideTaskPacket extends Packet {
 
         @Override
         public void encode(S2CHideTaskPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
 
             buffer.writeBoolean(msg.hide);
         }

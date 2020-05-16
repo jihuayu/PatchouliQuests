@@ -24,7 +24,8 @@ public class S2CKillTypeTaskCheckPacket extends Packet {
     public int id;
     public List<Boolean> reward;
     public int num;
-    public S2CKillTypeTaskCheckPacket(ResourceLocation book, ResourceLocation entry,  int id, boolean ok,boolean hide, boolean lock, List<Boolean> reward,int num) {
+
+    public S2CKillTypeTaskCheckPacket(ResourceLocation book, ResourceLocation entry, int id, boolean ok, boolean hide, boolean lock, List<Boolean> reward, int num) {
         this.book = book;
         this.entry = entry;
         this.ok = ok;
@@ -39,26 +40,26 @@ public class S2CKillTypeTaskCheckPacket extends Packet {
 
         @Override
         public void encode(S2CKillTypeTaskCheckPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
             buffer.writeBoolean(msg.ok);
             buffer.writeBoolean(msg.hide);
             buffer.writeBoolean(msg.lock);
-            BufferHelper.writeList(buffer,(i,j)->i.writeBoolean((boolean)j),msg.reward);
+            BufferHelper.writeList(buffer, (i, j) -> i.writeBoolean((boolean) j), msg.reward);
             buffer.writeVarInt(msg.num);
         }
 
         @Override
         public S2CKillTypeTaskCheckPacket decode(PacketBuffer buffer) {
-                BufferHelper.TaskRead tr = BufferHelper.readTaskId(buffer);
-                ResourceLocation book = tr.book;
-                ResourceLocation entry = tr.entry;
-                int id = tr.id;
-                boolean ok = buffer.readBoolean();
-                boolean hide = buffer.readBoolean();
-                boolean lock = buffer.readBoolean();
-                List<Boolean> list = BufferHelper.readList(buffer,(i,j)->j.add(i.readBoolean()),false);
-                int num = buffer.readVarInt();
-                return new S2CKillTypeTaskCheckPacket(book, entry, id, ok, hide, lock, list,num);
+            BufferHelper.TaskRead tr = BufferHelper.readTaskId(buffer);
+            ResourceLocation book = tr.book;
+            ResourceLocation entry = tr.entry;
+            int id = tr.id;
+            boolean ok = buffer.readBoolean();
+            boolean hide = buffer.readBoolean();
+            boolean lock = buffer.readBoolean();
+            List<Boolean> list = BufferHelper.readList(buffer, (i, j) -> j.add(i.readBoolean()), false);
+            int num = buffer.readVarInt();
+            return new S2CKillTypeTaskCheckPacket(book, entry, id, ok, hide, lock, list, num);
 
         }
 

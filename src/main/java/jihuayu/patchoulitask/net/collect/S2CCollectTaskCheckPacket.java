@@ -29,7 +29,7 @@ public class S2CCollectTaskCheckPacket extends S2CTaskCheckPacket {
 
         @Override
         public void encode(S2CCollectTaskCheckPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
             buffer.writeBoolean(msg.ok);
             buffer.writeInt(msg.task_num.size());
             for (int i : msg.task_num) {

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class TagsUpdatedHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onTagsUpdatedEvent(TagsUpdatedEvent event){
+    public static void onTagsUpdatedEvent(TagsUpdatedEvent event) {
         NearPositionTaskPage.LISTS.clear();
         KillTypeTask.LISTS.clear();
     }

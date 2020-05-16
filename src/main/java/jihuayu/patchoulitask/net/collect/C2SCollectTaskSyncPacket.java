@@ -34,7 +34,7 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
 
         @Override
         public void encode(C2SCollectTaskSyncPacket msg, PacketBuffer buffer) {
-            BufferHelper.writeTaskId(buffer,msg.book,msg.entry,msg.id);
+            BufferHelper.writeTaskId(buffer, msg.book, msg.entry, msg.id);
 
         }
 
