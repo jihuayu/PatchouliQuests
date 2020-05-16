@@ -1,4 +1,5 @@
 package jihuayu.patchoulitask.compat;
+
 import jihuayu.patchoulitask.ModMain;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -12,34 +13,29 @@ import net.minecraft.util.ResourceLocation;
  * @author LatvianModder
  */
 @JeiPlugin
-public class JEIIntegration implements IModPlugin{
+public class JEIIntegration implements IModPlugin {
     private static final ResourceLocation UID = new ResourceLocation(ModMain.MOD_ID, "jei");
     public static IJeiRuntime runtime;
 
     @Override
-    public void onRuntimeAvailable(IJeiRuntime r)
-    {
+    public void onRuntimeAvailable(IJeiRuntime r) {
         runtime = r;
     }
 
     @Override
-    public ResourceLocation getPluginUid()
-    {
+    public ResourceLocation getPluginUid() {
         return UID;
     }
 
     @Override
-    public void registerItemSubtypes(ISubtypeRegistration r)
-    {
+    public void registerItemSubtypes(ISubtypeRegistration r) {
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration r)
-    {
+    public void registerRecipes(IRecipeRegistration r) {
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration r)
-    {
+    public void registerCategories(IRecipeCategoryRegistration r) {
     }
 }

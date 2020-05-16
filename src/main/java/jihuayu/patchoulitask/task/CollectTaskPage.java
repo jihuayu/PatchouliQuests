@@ -2,8 +2,8 @@ package jihuayu.patchoulitask.task;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
-import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
+import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.util.JEIUtil;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
@@ -26,11 +26,10 @@ import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 public class CollectTaskPage extends BaseTaskPage {
     public transient List<Ingredient> items = new ArrayList<>();
     public transient List<Integer> items_num = new ArrayList<>();
-
-    @SerializedName("collect")
-    Map<String,Integer> itemsStr;
     @SerializedName("consume")
     public boolean consume;
+    @SerializedName("collect")
+    Map<String, Integer> itemsStr;
 
     @Override
     public void build(BookEntry entry, int pageNum) {
@@ -38,13 +37,13 @@ public class CollectTaskPage extends BaseTaskPage {
         for (String i : itemsStr.keySet()) {
             Ingredient ii = ItemStackUtil.loadIngredientFromString(i);
 
-            for (ItemStack t :ii.getMatchingStacks()){
+            for (ItemStack t : ii.getMatchingStacks()) {
                 t.setCount(itemsStr.get(i));
             }
             items.add(ii);
             items_num.add(0);
         }
-        if (stats==0){
+        if (stats == 0) {
             new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
@@ -61,7 +60,7 @@ public class CollectTaskPage extends BaseTaskPage {
     }
 
     public boolean render1(int mouseX, int mouseY, float pticks) {
-        if(!super.render1(mouseX,mouseY,pticks))return false;
+        if (!super.render1(mouseX, mouseY, pticks)) return false;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 25;
@@ -77,20 +76,21 @@ public class CollectTaskPage extends BaseTaskPage {
         RenderHelper.disableStandardItemLighting();
         return true;
     }
+
     @Override
     protected boolean questButtonClicked1(Button button) {
-        if (!super.questButtonClicked1(button))return false;
+        if (!super.questButtonClicked1(button)) return false;
         new C2SCollectTaskCheckPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         return true;
     }
 
     public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
-        if (super.mouseClicked1(mouseX,mouseY,mouseButton)<0)return -1;
+        if (super.mouseClicked1(mouseX, mouseY, mouseButton) < 0) return -1;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int recipeY = 25;
         for (int i = 0; i < items.size(); i++) {
-            if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
+            if (parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 24, 24)) {
                 ItemStack[] stacks = items.get(i).getMatchingStacks();
                 JEIUtil.showRecipes(stacks[(parent.ticksInBook / 20) % stacks.length]);
                 return 1;

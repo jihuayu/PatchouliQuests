@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckUtil {
-    public static boolean checkTask(List<Ingredient> i, List<ItemStack> stacks, boolean consume,List<Integer> num) {
-        int ok_num = 0;;
+    public static boolean checkTask(List<Ingredient> i, List<ItemStack> stacks, boolean consume, List<Integer> num) {
+        int ok_num = 0;
         List<Integer> copy = Lists.newCopyOnWriteArrayList(num);
         List<Integer> item_num = new ArrayList<>();
         for (int j = 0; j < i.size(); j++) {
@@ -19,7 +19,7 @@ public class CheckUtil {
                 boolean ans = i.get(j).test(stacks.get(t));
                 if (ans) {
                     if (num.get(j) < i.get(j).getMatchingStacks()[0].getCount()) {
-                        if(item_num.get(t)<stacks.get(t).getCount()){
+                        if (item_num.get(t) < stacks.get(t).getCount()) {
                             num.set(j, num.get(j) + 1);
                             item_num.set(t, item_num.get(t) + 1);
                             t--;
@@ -31,7 +31,7 @@ public class CheckUtil {
                 }
             }
         }
-        if(consume){
+        if (consume) {
             for (int j = 0; j < i.size(); j++) {
                 item_num.clear();
                 for (int t = 0; t < stacks.size(); t++) {
@@ -39,7 +39,7 @@ public class CheckUtil {
                     boolean ans = i.get(j).test(stacks.get(t));
                     if (ans) {
                         if (copy.get(j) < i.get(j).getMatchingStacks()[0].getCount()) {
-                            if(stacks.get(t).getCount()>0){
+                            if (stacks.get(t).getCount() > 0) {
                                 copy.set(j, copy.get(j) + 1);
                                 stacks.get(t).setCount(stacks.get(t).getCount() - 1);
                                 t--;

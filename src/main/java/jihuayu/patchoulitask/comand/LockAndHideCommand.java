@@ -36,8 +36,8 @@ public class LockAndHideCommand {
 
     public static void register2(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("task").requires((p_198496_0_) -> {
-                    return p_198496_0_.hasPermissionLevel(2);
-                }).then(Commands.argument("player", EntityArgument.players())
+            return p_198496_0_.hasPermissionLevel(2);
+        }).then(Commands.argument("player", EntityArgument.players())
                 .then(Commands.argument("book", ResourceLocationArgument.resourceLocation()).suggests(AVAILABLE_BOOKS)
                         .then(Commands.argument("entry", ResourceLocationArgument.resourceLocation()).suggests(AVAILABLE_ENTRIES)
                                 .then(Commands.argument("id", IntegerArgumentType.integer(0))
@@ -62,7 +62,7 @@ public class LockAndHideCommand {
                                                     IntegerArgumentType.getInteger(ctx, "id"), ctx, false);
                                         }))
 
-                        )))));
+                                )))));
     }
 
     public static int lock(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean lock) throws CommandSyntaxException {

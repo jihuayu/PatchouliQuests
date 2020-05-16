@@ -27,6 +27,7 @@ public class NearPositionTaskPage extends BaseTaskPage {
         super.build(entry, pageNum);
         POSES.add(this);
     }
+
     @Override
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
@@ -34,24 +35,25 @@ public class NearPositionTaskPage extends BaseTaskPage {
             new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
+
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
         if (!super.render1(mouseX, mouseY, pticks)) return false;
         int recipeY = 25;
         parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.intr"),
                 fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.intr")) / 2 + 4, recipeY - 6, book.textColor);
-        recipeY+=10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.x",x),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.x",x)) / 2 + 12, recipeY - 6, book.textColor);
-        recipeY+=10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.y",y),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.y",y)) / 2 + 12, recipeY - 6, book.textColor);
-        recipeY+=10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.z",z),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.z",z)) / 2 + 12, recipeY - 6, book.textColor);
-        recipeY+=10;
-        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.range",range),
-                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.range",range)) / 2 + 12, recipeY - 6, book.textColor);
+        recipeY += 10;
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.x", x),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.x", x)) / 2 + 12, recipeY - 6, book.textColor);
+        recipeY += 10;
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.y", y),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.y", y)) / 2 + 12, recipeY - 6, book.textColor);
+        recipeY += 10;
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.z", z),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.z", z)) / 2 + 12, recipeY - 6, book.textColor);
+        recipeY += 10;
+        parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.near_pos.range", range),
+                fontRenderer.getStringWidth(I18n.format("patchouliquests.task.near_pos.range", range)) / 2 + 12, recipeY - 6, book.textColor);
         return true;
     }
 }

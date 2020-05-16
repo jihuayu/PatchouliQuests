@@ -20,7 +20,7 @@ public class C2SRewardGetPacket extends ClientPacket {
     int id;
     int index;
 
-    public C2SRewardGetPacket(ResourceLocation book, ResourceLocation entry, int id,int index ) {
+    public C2SRewardGetPacket(ResourceLocation book, ResourceLocation entry, int id, int index) {
         this.book = book;
         this.entry = entry;
         this.id = id;
@@ -43,7 +43,7 @@ public class C2SRewardGetPacket extends ClientPacket {
             ResourceLocation entry = buffer.readResourceLocation();
             int page = buffer.readInt();
             int index = buffer.readInt();
-            return new C2SRewardGetPacket(book, entry, page,index);
+            return new C2SRewardGetPacket(book, entry, page, index);
         }
 
         @Override
@@ -52,26 +52,26 @@ public class C2SRewardGetPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                BookPage page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (page instanceof BaseTaskPage) {
-                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((BaseTaskPage) page).hide);
+                    if (!BookNBTHelper.hasHide(player, message.book.toString(), message.entry.toString(), message.id)) {
+                        BookNBTHelper.setHide(player, message.book.toString(), message.entry.toString(), message.id, ((BaseTaskPage) page).hide);
                     }
-                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((BaseTaskPage) page).lock);
+                    if (!BookNBTHelper.hasLock(player, message.book.toString(), message.entry.toString(), message.id)) {
+                        BookNBTHelper.setLock(player, message.book.toString(), message.entry.toString(), message.id, ((BaseTaskPage) page).lock);
                     }
-                    if (!BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,message.index)){
-                        BookNBTHelper.setRewardStats(player,message.book.toString(),message.entry.toString(),message.id,message.index,true);
+                    if (!BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, message.index)) {
+                        BookNBTHelper.setRewardStats(player, message.book.toString(), message.entry.toString(), message.id, message.index, true);
                         player.addItemStackToInventory(((BaseTaskPage) page).reward.get(message.index).copy());
                     }
-                    boolean over = BookNBTHelper.isOver(player,message.book.toString(),message.entry.toString(),message.id);
-                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
-                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
+                    boolean over = BookNBTHelper.isOver(player, message.book.toString(), message.entry.toString(), message.id);
+                    boolean hide = BookNBTHelper.isHide(player, message.book.toString(), message.entry.toString(), message.id);
+                    boolean lock = BookNBTHelper.isLock(player, message.book.toString(), message.entry.toString(), message.id);
                     ArrayList<Boolean> list = new ArrayList<>();
-                    for (int j = 0;j<((BaseTaskPage) page).reward.size();j++){
-                        list.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                    for (int j = 0; j < ((BaseTaskPage) page).reward.size(); j++) {
+                        list.add(BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, j));
                     }
-                    new S2CTaskCheckPacket(message.book,message.entry,over,message.id,hide,lock,list).send(player);
+                    new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock, list).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

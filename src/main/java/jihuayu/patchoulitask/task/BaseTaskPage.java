@@ -30,22 +30,22 @@ public class BaseTaskPage extends PageQuest {
     public transient boolean is_hide = false;
     public transient List<ItemStack> reward = new ArrayList<>();
     public transient List<Boolean> reward_stats = new ArrayList<>();
-    Button button;
     @SerializedName("finish_cmd")
     public List<String> finishCmd;
-    @SerializedName("reward")
-    List<String> rewardStr;
     @SerializedName("hide")
     public boolean hide = false;
     @SerializedName("lock")
     public boolean lock = false;
     @SerializedName("id")
     public Integer id;
+    Button button;
+    @SerializedName("reward")
+    List<String> rewardStr;
 
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
-        if (rewardStr != null){
+        if (rewardStr != null) {
             for (String i : rewardStr) {
                 reward.add(ItemStackUtil.loadStackFromString(i));
                 reward_stats.add(false);
@@ -53,7 +53,7 @@ public class BaseTaskPage extends PageQuest {
         }
         if (finishCmd == null)
             finishCmd = new ArrayList<>();
-        if (id == null){
+        if (id == null) {
             id = pageNum;
         }
     }
@@ -66,69 +66,75 @@ public class BaseTaskPage extends PageQuest {
         addButton(button);
         updateButtonText(button);
     }
+
     @Override
     final public void render(int mouseX, int mouseY, float pticks) {
         super.render(mouseX, mouseY, pticks);
-        render1(mouseX,mouseY,pticks);
+        render1(mouseX, mouseY, pticks);
     }
+
     public boolean render1(int mouseX, int mouseY, float pticks) {
-        if ((!is_hide)&&hide)
+        if ((!is_hide) && hide)
             onHidden(parent);
-        if (hide){
+        if (hide) {
             return false;
         }
-        if(is_hide)
+        if (is_hide)
             addButton(button);
         updateButtonText(button);
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
         int wrap = GuiBook.PAGE_WIDTH / 24;
-        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size()+(finishCmd.isEmpty()?0:1)) * 1.0 / wrap))) * 24 - 12 - 25;
-        if (reward.size()>0){
+        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size() + (finishCmd.isEmpty() ? 0 : 1)) * 1.0 / wrap))) * 24 - 12 - 25;
+        if (reward.size() > 0) {
             parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward"),
-                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward"))/2+4, recipeY - 6, book.textColor);
+                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward")) / 2 + 4, recipeY - 6, book.textColor);
             for (int i = 0; i < reward.size(); i++) {
                 RenderSystem.enableBlend();
                 RenderSystem.color4f(1F, 1F, 1F, 1F);
                 mc.textureManager.bindTexture(book.craftingTexture);
                 AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
-                renderItemStackAndNumAndGet(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i),reward_stats.get(i));
+                renderItemStackAndNumAndGet(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, reward.get(i), reward_stats.get(i));
             }
-            if (!finishCmd.isEmpty()){
+            if (!finishCmd.isEmpty()) {
                 RenderSystem.enableBlend();
                 RenderSystem.color4f(1F, 1F, 1F, 1F);
                 mc.textureManager.bindTexture(book.craftingTexture);
                 AbstractGui.blit(recipeX + (reward.size() % wrap) * 24, recipeY + (reward.size() / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
-                renderCommand(recipeX + (reward.size() % wrap) * 24 + 4, recipeY + (reward.size() / wrap) * 24 + 8, mouseX, mouseY,finishCmd);
+                renderCommand(recipeX + (reward.size() % wrap) * 24 + 4, recipeY + (reward.size() / wrap) * 24 + 8, mouseX, mouseY, finishCmd);
             }
         }
         return true;
     }
+
     @Override
     protected void questButtonClicked(Button button) {
         questButtonClicked1(button);
     }
+
     final public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         return mouseClicked1(mouseX, mouseY, mouseButton) > 0;
     }
+
     public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
-        if (hide)return -1;
-        if (stats<=0)return 0;
+        if (hide) return -1;
+        if (stats <= 0) return 0;
         int wrap = GuiBook.PAGE_WIDTH / 24;
         int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
-        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size()+(finishCmd.isEmpty()?0:1)) * 1.0 / wrap))) * 24 - 12 - 25;
-        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_1){
+        int recipeY = GuiBook.PAGE_HEIGHT - (((int) Math.ceil((reward.size() + (finishCmd.isEmpty() ? 0 : 1)) * 1.0 / wrap))) * 24 - 12 - 25;
+        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_1) {
             for (int i = 0; i < reward.size(); i++) {
-                if(parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4,24, 24)){
+                if (parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 24, 24)) {
                     if (!reward_stats.get(i))
-                        new C2SRewardGetPacket(book.id,entry.getId(),id,i).send();
+                        new C2SRewardGetPacket(book.id, entry.getId(), id, i).send();
                     return 1;
                 }
             }
         }
         return -1;
     }
+
     protected boolean questButtonClicked1(Button button) {
-        if (lock)return false;
+        if (lock) return false;
         String res = entry.getId().toString();
         boolean task = true;
         for (BookPage i : entry.getPages()) {
@@ -153,7 +159,7 @@ public class BaseTaskPage extends PageQuest {
     }
 
     public void updateButtonText(Button button) {
-        if (lock){
+        if (lock) {
             button.setMessage(I18n.format("patchouliquests.task.lock"));
             return;
         }
@@ -171,22 +177,23 @@ public class BaseTaskPage extends PageQuest {
     }
 
     public void renderCommand(int x, int y, int mouseX, int mouseY, List<String> commands) {
-        if (commands == null || commands.size()<1) {
+        if (commands == null || commands.size() < 1) {
             return;
         }
-        ItemStack stack = new ItemStack(Items.COMMAND_BLOCK,commands.size());
+        ItemStack stack = new ItemStack(Items.COMMAND_BLOCK, commands.size());
         mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
         mc.getItemRenderer().renderItemOverlays(fontRenderer, stack, x, y);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             List<ITextComponent> list = new ArrayList<>();
-            for (String i : commands){
+            for (String i : commands) {
                 list.add(new StringTextComponent(i).setStyle(new Style().setColor(TextFormatting.YELLOW)));
             }
             parent.setTooltip(list);
         }
         RenderHelper.disableStandardItemLighting();
     }
-    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack,boolean ok) {
+
+    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack, boolean ok) {
         if (stack == null || stack.isEmpty()) {
             return;
         }

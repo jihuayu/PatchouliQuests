@@ -52,7 +52,7 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (i instanceof NearPositionTaskPage) {
                     if (!BookNBTHelper.hasHide(player, message.book.toString(), message.entry.toString(), message.id)) {
                         BookNBTHelper.setHide(player, message.book.toString(), message.entry.toString(), message.id, ((NearPositionTaskPage) i).hide);
@@ -65,19 +65,19 @@ public class C2SNearPositionTaskCheckPacket extends ClientPacket {
                         boolean hide = BookNBTHelper.isHide(player, message.book.toString(), message.entry.toString(), message.id);
                         boolean lock = BookNBTHelper.isLock(player, message.book.toString(), message.entry.toString(), message.id);
                         ArrayList<Boolean> list = new ArrayList<>();
-                        for (int j = 0;j<((BaseTaskPage) i).reward.size();j++){
-                            list.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                        for (int j = 0; j < ((BaseTaskPage) i).reward.size(); j++) {
+                            list.add(BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, j));
                         }
-                        new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock,list).send(player);
+                        new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock, list).send(player);
                         return;
                     }
-                    if(player.getPosition().distanceSq(((NearPositionTaskPage) i).x, ((NearPositionTaskPage) i).y, ((NearPositionTaskPage) i).z,true)<=
-                            ((NearPositionTaskPage) i).range){
+                    if (player.getPosition().distanceSq(((NearPositionTaskPage) i).x, ((NearPositionTaskPage) i).y, ((NearPositionTaskPage) i).z, true) <=
+                            ((NearPositionTaskPage) i).range) {
                         BookHelper.complete(player, (BaseTaskPage) i);
-                        BookNBTHelper.setOver(player,message.book.toString(),message.entry.toString(),message.id,true);
+                        BookNBTHelper.setOver(player, message.book.toString(), message.entry.toString(), message.id, true);
                         return;
                     }
-                    BookNBTHelper.setOver(player, message.book.toString(), message.entry.toString(), message.id,false);
+                    BookNBTHelper.setOver(player, message.book.toString(), message.entry.toString(), message.id, false);
                 }
 
             });

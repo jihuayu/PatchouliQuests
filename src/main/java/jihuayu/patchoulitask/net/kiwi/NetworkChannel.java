@@ -1,13 +1,7 @@
 //from kiwi
 package jihuayu.patchoulitask.net.kiwi;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Maps;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -21,16 +15,27 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.PacketDistributor.PacketTarget;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public enum NetworkChannel {
     INSTANCE;
 
+    public static final PacketDistributor<ServerPlayerEntity> ALL_EXCEPT = new PacketDistributor<>((dist, player) -> {
+        return p -> getServer().getPlayerList().getPlayers().forEach(player2 -> {
+            if (player.get() != player2) {
+                player2.connection.netManager.sendPacket(p);
+            }
+        });
+    }, NetworkDirection.PLAY_TO_CLIENT);
     private static final String PROTOCOL_VERSION = Integer.toString(1);
-
     private final Map<Class<?>, SimpleChannel> packet2channel = Maps.newConcurrentMap();
     private final Map<ResourceLocation, Pair<SimpleChannel, AtomicInteger>> channels = Maps.newConcurrentMap();
 
-    private NetworkChannel() {}
+    NetworkChannel() {
+    }
 
     public static <T extends Packet> void register(Class<T> klass, Packet.PacketHandler<T> handler) {
         register(klass, handler, "main");
@@ -72,14 +77,6 @@ public enum NetworkChannel {
     public static void sendToServer(Packet packet) {
         channel(packet.getClass()).sendToServer(packet);
     }
-
-    public static final PacketDistributor<ServerPlayerEntity> ALL_EXCEPT = new PacketDistributor<>((dist, player) -> {
-        return p -> getServer().getPlayerList().getPlayers().forEach(player2 -> {
-            if (player.get() != player2) {
-                player2.connection.netManager.sendPacket(p);
-            }
-        });
-    }, NetworkDirection.PLAY_TO_CLIENT);
 
     private static MinecraftServer getServer() {
         return LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);

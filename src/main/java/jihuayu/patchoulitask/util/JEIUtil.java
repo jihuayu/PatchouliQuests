@@ -5,8 +5,7 @@ import mezz.jei.api.recipe.IFocus;
 import net.minecraftforge.fml.ModList;
 
 public class JEIUtil {
-    public static void showRecipes(Object object)
-    {
+    public static void showRecipes(Object object) {
         if (ModList.get().isLoaded("jei"))
             JEIIntegration.runtime.getRecipesGui().show(JEIIntegration.runtime.getRecipeManager().createFocus(IFocus.Mode.OUTPUT, object));
     }

@@ -38,7 +38,7 @@ public class C2SPaletteSyncPacket extends ClientPacket {
         public void handle(C2SPaletteSyncPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                PaletteHelper.PALETTE_LIST.put(message.book,Lists.newArrayList(book.contents.entries.keySet()));
+                PaletteHelper.PALETTE_LIST.put(message.book, Lists.newArrayList(book.contents.entries.keySet()));
                 new S2CPaletteSyncPacket(message.book, PaletteHelper.PALETTE_LIST.getOrDefault(message.book, new ArrayList<>())).send(ctx.get().getSender());
             });
             ctx.get().setPacketHandled(true);

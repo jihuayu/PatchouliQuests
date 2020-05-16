@@ -29,12 +29,14 @@ public class ModMain {
     public static final String MOD_ID = "patchouliquests";
     public static final Logger LOGGER = LogManager.getLogger();
     public static CommandDispatcher<CommandSource> COMMANDS;
+
     static {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_position_task", NearPositionTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_struct_task", NearStructTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("kill_entity_task", KillTypeTask.class);
     }
+
     public ModMain() {
         NetworkChannel.register(C2SCollectTaskSyncPacket.class, new C2SCollectTaskSyncPacket.Handler());
         NetworkChannel.register(C2SNearPositionTaskCheckPacket.class, new C2SNearPositionTaskCheckPacket.Handler());

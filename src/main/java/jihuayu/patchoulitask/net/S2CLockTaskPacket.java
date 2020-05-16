@@ -41,14 +41,14 @@ public class S2CLockTaskPacket extends Packet {
             ResourceLocation entry = buffer.readResourceLocation();
             int page = buffer.readInt();
             boolean lock = buffer.readBoolean();
-            return new S2CLockTaskPacket(book, entry, page,lock);
+            return new S2CLockTaskPacket(book, entry, page, lock);
         }
 
         @Override
         public void handle(S2CLockTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).lock = message.lock;
                 }

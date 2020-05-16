@@ -6,7 +6,7 @@ import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -52,28 +52,28 @@ public class C2SCollectTaskSyncPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (i instanceof CollectTaskPage) {
-                    if (!BookNBTHelper.hasHide(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setHide(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).hide);
+                    if (!BookNBTHelper.hasHide(player, message.book.toString(), message.entry.toString(), message.id)) {
+                        BookNBTHelper.setHide(player, message.book.toString(), message.entry.toString(), message.id, ((CollectTaskPage) i).hide);
                     }
-                    if (!BookNBTHelper.hasLock(player,message.book.toString(),message.entry.toString(),message.id)){
-                        BookNBTHelper.setLock(player,message.book.toString(),message.entry.toString(),message.id,((CollectTaskPage) i).lock);
+                    if (!BookNBTHelper.hasLock(player, message.book.toString(), message.entry.toString(), message.id)) {
+                        BookNBTHelper.setLock(player, message.book.toString(), message.entry.toString(), message.id, ((CollectTaskPage) i).lock);
                     }
                     CompoundNBT n = player.getPersistentData();
                     NBTHelper nbt = NBTHelper.of(n);
-                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over",message.book.toString(),message.entry.toString(),message.id));
+                    boolean over = nbt.getBoolean(String.format("patchouliquests.%s.%s.%d.over", message.book.toString(), message.entry.toString(), message.id));
                     List<Integer> list = new ArrayList<>();
-                    for (int k = 0; k < ((CollectTaskPage) i).items.size();k++){
-                        list.add(BookNBTHelper.getTaskNum(player,message.book.toString(),message.entry.toString(),message.id,k));
+                    for (int k = 0; k < ((CollectTaskPage) i).items.size(); k++) {
+                        list.add(BookNBTHelper.getTaskNum(player, message.book.toString(), message.entry.toString(), message.id, k));
                     }
-                    boolean hide = BookNBTHelper.isHide(player,message.book.toString(),message.entry.toString(),message.id);
-                    boolean lock = BookNBTHelper.isLock(player,message.book.toString(),message.entry.toString(),message.id);
+                    boolean hide = BookNBTHelper.isHide(player, message.book.toString(), message.entry.toString(), message.id);
+                    boolean lock = BookNBTHelper.isLock(player, message.book.toString(), message.entry.toString(), message.id);
                     ArrayList<Boolean> list1 = new ArrayList<>();
-                    for (int j = 0;j<((BaseTaskPage) i).reward.size();j++){
-                        list1.add(BookNBTHelper.getRewardStats(player,message.book.toString(),message.entry.toString(),message.id,j));
+                    for (int j = 0; j < ((BaseTaskPage) i).reward.size(); j++) {
+                        list1.add(BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, j));
                     }
-                    new S2CCollectTaskCheckPacket(message.book,message.entry,over,message.id,list,hide,lock,list1).send(player);
+                    new S2CCollectTaskCheckPacket(message.book, message.entry, over, message.id, list, hide, lock, list1).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);

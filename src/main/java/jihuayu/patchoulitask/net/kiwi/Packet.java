@@ -1,16 +1,17 @@
 //from kiwi
 package jihuayu.patchoulitask.net.kiwi;
 
-import java.util.function.Supplier;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.PacketDistributor.PacketTarget;
 
+import java.util.function.Supplier;
+
 public abstract class Packet {
-    public Packet() {}
+    public Packet() {
+    }
 
     public void send(PacketTarget target) {
         NetworkChannel.send(target, this);
@@ -23,7 +24,8 @@ public abstract class Packet {
         send(PacketDistributor.PLAYER.with(() -> player));
     }
 
-    public void send() {}
+    public void send() {
+    }
 
     public static abstract class PacketHandler<T extends Packet> {
         public abstract void encode(T msg, PacketBuffer buffer);

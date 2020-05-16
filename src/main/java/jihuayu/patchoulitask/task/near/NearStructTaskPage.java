@@ -26,6 +26,7 @@ public class NearStructTaskPage extends BaseTaskPage {
         super.build(entry, pageNum);
         POSES.add(this);
     }
+
     @Override
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
@@ -33,6 +34,7 @@ public class NearStructTaskPage extends BaseTaskPage {
             new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
+
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
         if (!super.render1(mouseX, mouseY, pticks)) return false;

@@ -41,14 +41,14 @@ public class S2CHideTaskPacket extends Packet {
             ResourceLocation entry = buffer.readResourceLocation();
             int page = buffer.readInt();
             boolean lock = buffer.readBoolean();
-            return new S2CHideTaskPacket(book, entry, page,lock);
+            return new S2CHideTaskPacket(book, entry, page, lock);
         }
 
         @Override
         public void handle(S2CHideTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(),message.id);
+                BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (i instanceof BaseTaskPage) {
                     ((BaseTaskPage) i).hide = message.hide;
                 }
