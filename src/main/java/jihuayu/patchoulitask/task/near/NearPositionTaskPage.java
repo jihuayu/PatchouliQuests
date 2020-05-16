@@ -14,7 +14,7 @@ import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 
 
 public class NearPositionTaskPage extends BaseTaskPage {
-    public transient static final List<NearPositionTaskPage> POSES = new ArrayList<>();
+    public transient static final List<NearPositionTaskPage> LISTS = new ArrayList<>();
 
     public int x;
     public int y;
@@ -25,14 +25,14 @@ public class NearPositionTaskPage extends BaseTaskPage {
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
-        POSES.add(this);
+        LISTS.add(this);
     }
 
     @Override
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
         if (stats == 0) {
-            new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
+            new C2STaskSyncPacket(book.id, this.entry.getId(), this.id).send();
         }
     }
 

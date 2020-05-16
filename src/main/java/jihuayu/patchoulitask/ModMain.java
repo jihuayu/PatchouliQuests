@@ -6,6 +6,8 @@ import jihuayu.patchoulitask.net.*;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.S2CCollectTaskCheckPacket;
+import jihuayu.patchoulitask.net.kill.C2SKillTypeTaskSyncPacket;
+import jihuayu.patchoulitask.net.kill.S2CKillTypeTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.near.C2SNearPositionTaskCheckPacket;
 import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
@@ -45,6 +47,7 @@ public class ModMain {
         NetworkChannel.register(C2SPaletteSyncPacket.class, new C2SPaletteSyncPacket.Handler());
         NetworkChannel.register(C2SCollectTaskCheckPacket.class, new C2SCollectTaskCheckPacket.Handler());
         NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
+        NetworkChannel.register(C2SKillTypeTaskSyncPacket.class, new C2SKillTypeTaskSyncPacket.Handler());
 
 
         NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
@@ -52,6 +55,7 @@ public class ModMain {
         NetworkChannel.register(S2CLockTaskPacket.class, new S2CLockTaskPacket.Handler());
         NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
         NetworkChannel.register(S2CPaletteSyncPacket.class, new S2CPaletteSyncPacket.Handler());
+        NetworkChannel.register(S2CKillTypeTaskCheckPacket.class, new S2CKillTypeTaskCheckPacket.Handler());
     }
 
     @SubscribeEvent

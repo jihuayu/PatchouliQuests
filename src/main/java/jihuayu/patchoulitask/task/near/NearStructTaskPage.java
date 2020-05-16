@@ -31,7 +31,7 @@ public class NearStructTaskPage extends BaseTaskPage {
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
         if (stats == 0) {
-            new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
+            new C2STaskSyncPacket(book.id, this.entry.getId(), this.id).send();
         }
     }
 

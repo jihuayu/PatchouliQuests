@@ -42,6 +42,10 @@ public class BaseTaskPage extends PageQuest {
     @SerializedName("reward")
     List<String> rewardStr;
 
+    public  BookEntry getEntry(){
+        return entry;
+    }
+
     @Override
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);

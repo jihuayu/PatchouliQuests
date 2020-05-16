@@ -50,7 +50,7 @@ public class CollectTaskPage extends BaseTaskPage {
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
         if (stats == 0) {
-            new C2SCollectTaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
+            new C2SCollectTaskSyncPacket(book.id, this.entry.getId(), this.id).send();
         }
     }
 

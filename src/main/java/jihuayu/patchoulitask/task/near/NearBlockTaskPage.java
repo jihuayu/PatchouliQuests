@@ -17,7 +17,7 @@ import static vazkii.patchouli.common.item.ItemModBook.TAG_BOOK;
 
 
 public class NearBlockTaskPage extends BaseTaskPage {
-    public transient static final List<NearBlockTaskPage> POSES = new ArrayList<>();
+    public transient static final List<NearBlockTaskPage> LISTS = new ArrayList<>();
 
     public transient BlockState blockState;
 
@@ -32,7 +32,7 @@ public class NearBlockTaskPage extends BaseTaskPage {
             if (!block.isEmpty()) {
                 blockState = StringStateMatcher.fromString(block).getDisplayedState(0);
             }
-            POSES.add(this);
+            LISTS.add(this);
 
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class NearBlockTaskPage extends BaseTaskPage {
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
         if (stats == 0) {
-            new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
+            new C2STaskSyncPacket(book.id, this.entry.getId(), this.id).send();
         }
     }
 

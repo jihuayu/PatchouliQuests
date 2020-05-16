@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.ModMain;
+import jihuayu.patchoulitask.net.kill.C2SKillTypeTaskSyncPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
+import jihuayu.patchoulitask.task.near.NearBlockTaskPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public class KillTypeTask extends BaseTaskPage {
+    public transient static final List<KillTypeTask> LISTS = new ArrayList<>();
+
     public transient Entity entity;
     public transient Function<World, Entity> creator;
     public transient float renderScale, offset;
@@ -34,11 +38,12 @@ public class KillTypeTask extends BaseTaskPage {
     float extraOffset = -0F;
     @SerializedName("default_rotation")
     float defaultRotation = -45f;
-    int num;
-    transient int now_num;
+    @SerializedName("num")
+    public int num;
+    public transient int now_num;
     boolean rotate = true;
 
-    String name;
+    public String name;
 
     public static void renderEntity(Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
         entity.world = world;
@@ -62,6 +67,8 @@ public class KillTypeTask extends BaseTaskPage {
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
         creator = EntityUtil.loadEntity(name);
+        LISTS.add(this);
+
     }
 
     public boolean render1(int mouseX, int mouseY, float pticks) {
@@ -106,6 +113,9 @@ public class KillTypeTask extends BaseTaskPage {
         super.onDisplayed(parent, left, top);
 
         loadEntity(parent.getMinecraft().world);
+        if (stats==0){
+            new C2SKillTypeTaskSyncPacket(book.id, this.entry.getId(), this.id).send();
+        }
     }
 
     private void loadEntity(World world) {

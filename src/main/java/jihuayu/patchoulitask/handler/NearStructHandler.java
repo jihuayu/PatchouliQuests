@@ -23,7 +23,7 @@ public class NearStructHandler {
             if (time < 10) return;
             time = 0;
             PlayerEntity player = Minecraft.getInstance().player;
-            for (NearPositionTaskPage i : NearPositionTaskPage.POSES) {
+            for (NearPositionTaskPage i : NearPositionTaskPage.LISTS) {
                 if (i.stats > 0 || i.lock) continue;
                 new C2SNearStructTaskCheckPacket(i.book.id, i.parent.getEntry().getId(), i.id).send();
             }

@@ -73,6 +73,14 @@ public class BookNBTHelper {
         NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.hide", book, entry, page), ok);
     }
 
+    public static void setKillNum(PlayerEntity playerEntity, String book, String entry, int page, int num) {
+        NBTHelper.of(playerEntity.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.num", book, entry, page), num);
+    }
+
+    public static int getKillNum(PlayerEntity playerEntity, String book, String entry, int page) {
+        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.num", book, entry, page),0);
+    }
+
     public static BookPage getPage(List<BookPage> pages, int id) {
         for (BookPage page : pages) {
             if (page instanceof BaseTaskPage && ((BaseTaskPage) page).id == id) {
