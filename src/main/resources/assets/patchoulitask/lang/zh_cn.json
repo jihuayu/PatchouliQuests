@@ -6,5 +6,11 @@
   "patchouliquests.tooltip.item.num": "数量:",
   "patchouliquests.tooltip.item.consume": "将会消耗物品",
   "patchouliquests.task.lock": "锁定",
-  "patchouliquests.command.failed": "指令运行错误!"
+  "patchouliquests.command.failed": "指令运行错误!",
+  "patchouliquests.task.near_pos.intr": "前往:",
+  "patchouliquests.task.near_pos.x": "X: %d",
+  "patchouliquests.task.near_pos.y": "Y: %d",
+  "patchouliquests.task.near_pos.z": "Z: %d",
+  "patchouliquests.task.near_pos.range": "范围: %d",
+  "patchouliquests.tooltip.item.get": "左键领取奖励"
 }
