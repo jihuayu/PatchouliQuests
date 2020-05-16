@@ -5,6 +5,7 @@ import jihuayu.patchoulitask.task.BaseTaskPage;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,14 @@ public class NearStructTaskPage extends BaseTaskPage {
     public void build(BookEntry entry, int pageNum) {
         super.build(entry, pageNum);
         POSES.add(this);
+    }
+    @Override
+    public void onDisplayed(GuiBookEntry parent, int left, int top) {
+        super.onDisplayed(parent, left, top);
         if (stats == 0) {
             new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
-
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
         if (!super.render1(mouseX, mouseY, pticks)) return false;

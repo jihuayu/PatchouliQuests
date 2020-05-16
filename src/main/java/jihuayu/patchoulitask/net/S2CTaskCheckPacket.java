@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static jihuayu.patchoulitask.util.PaletteHelper.BOOK_LIST;
+import static jihuayu.patchoulitask.util.PaletteHelper.PALETTE_LIST;
+
 public class S2CTaskCheckPacket extends Packet {
     public boolean ok;
     public boolean hide;
@@ -36,8 +39,16 @@ public class S2CTaskCheckPacket extends Packet {
 
         @Override
         public void encode(S2CTaskCheckPacket msg, PacketBuffer buffer) {
-            buffer.writeResourceLocation(msg.book);
-            buffer.writeResourceLocation(msg.entry);
+            if (!BOOK_LIST.contains(msg.book)||PALETTE_LIST.get(msg.book)==null|| !PALETTE_LIST.get(msg.book).contains(msg.entry)){
+                buffer.writeBoolean(false);
+                buffer.writeResourceLocation(msg.book);
+                buffer.writeResourceLocation(msg.entry);
+            }
+            else {
+                buffer.writeBoolean(true);
+                buffer.writeVarInt(BOOK_LIST.indexOf(msg.book));
+                buffer.writeVarInt(PALETTE_LIST.get(msg.book).indexOf(msg.entry));
+            }
             buffer.writeBoolean(msg.ok);
             buffer.writeInt(msg.id);
             buffer.writeBoolean(msg.hide);
@@ -50,18 +61,35 @@ public class S2CTaskCheckPacket extends Packet {
 
         @Override
         public S2CTaskCheckPacket decode(PacketBuffer buffer) {
-            ResourceLocation book = buffer.readResourceLocation();
-            ResourceLocation entry = buffer.readResourceLocation();
-            boolean ok = buffer.readBoolean();
-            int page = buffer.readInt();
-            boolean hide = buffer.readBoolean();
-            boolean lock = buffer.readBoolean();
-            int num = buffer.readInt();
-            List<Boolean> list = new ArrayList<>();
-            for (int i = 0;i<num;i++){
-                list.add(buffer.readBoolean());
+            if(buffer.readBoolean()){
+                ResourceLocation book = BOOK_LIST.get(buffer.readVarInt());
+                ResourceLocation entry = PALETTE_LIST.get(book).get(buffer.readVarInt());
+                boolean ok = buffer.readBoolean();
+                int page = buffer.readInt();
+                boolean hide = buffer.readBoolean();
+                boolean lock = buffer.readBoolean();
+                int num = buffer.readInt();
+                List<Boolean> list = new ArrayList<>();
+                for (int i = 0;i<num;i++){
+                    list.add(buffer.readBoolean());
+                }
+                return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock,list);
             }
-            return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock,list);
+            else {
+                ResourceLocation book = buffer.readResourceLocation();
+                ResourceLocation entry = buffer.readResourceLocation();
+                boolean ok = buffer.readBoolean();
+                int page = buffer.readInt();
+                boolean hide = buffer.readBoolean();
+                boolean lock = buffer.readBoolean();
+                int num = buffer.readInt();
+                List<Boolean> list = new ArrayList<>();
+                for (int i = 0;i<num;i++){
+                    list.add(buffer.readBoolean());
+                }
+                return new S2CTaskCheckPacket(book, entry, ok, page,hide,lock,list);
+            }
+
         }
 
         @Override

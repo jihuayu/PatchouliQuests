@@ -35,19 +35,23 @@ public class ModMain {
         ClientBookRegistry.INSTANCE.pageTypes.put("near_struct_task", NearStructTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("kill_entity_task", KillTypeTask.class);
     }
-
     public ModMain() {
-        NetworkChannel.register(C2SCollectTaskCheckPacket.class, new C2SCollectTaskCheckPacket.Handler());
-        NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
-        NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
         NetworkChannel.register(C2SCollectTaskSyncPacket.class, new C2SCollectTaskSyncPacket.Handler());
-        NetworkChannel.register(S2CCollectTaskCheckPacket.class, new S2CCollectTaskCheckPacket.Handler());
-        NetworkChannel.register(S2CLockTaskPacket.class, new S2CLockTaskPacket.Handler());
-        NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
         NetworkChannel.register(C2SNearPositionTaskCheckPacket.class, new C2SNearPositionTaskCheckPacket.Handler());
         NetworkChannel.register(C2SRewardGetPacket.class, new C2SRewardGetPacket.Handler());
         NetworkChannel.register(C2SNearStructTaskCheckPacket.class, new C2SNearStructTaskCheckPacket.Handler());
+        NetworkChannel.register(C2SPaletteSyncPacket.class, new C2SPaletteSyncPacket.Handler());
+        NetworkChannel.register(C2SCollectTaskCheckPacket.class, new C2SCollectTaskCheckPacket.Handler());
+        NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
+
+
+        NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
+        NetworkChannel.register(S2CCollectTaskCheckPacket.class, new S2CCollectTaskCheckPacket.Handler());
+        NetworkChannel.register(S2CLockTaskPacket.class, new S2CLockTaskPacket.Handler());
+        NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
+        NetworkChannel.register(S2CPaletteSyncPacket.class, new S2CPaletteSyncPacket.Handler());
     }
+
     @SubscribeEvent
     protected static void serverInit(FMLServerStartingEvent event) {
         COMMANDS = event.getCommandDispatcher();

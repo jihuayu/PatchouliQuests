@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.multiblock.StringStateMatcher;
 
 import java.util.ArrayList;
@@ -32,11 +33,17 @@ public class NearBlockTaskPage extends BaseTaskPage {
                 blockState = StringStateMatcher.fromString(block).getDisplayedState(0);
             }
             POSES.add(this);
-            if (stats == 0) {
-                new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
-            }
+
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDisplayed(GuiBookEntry parent, int left, int top) {
+        super.onDisplayed(parent, left, top);
+        if (stats == 0) {
+            new C2STaskSyncPacket(new ResourceLocation(book.getBookItem().getTag().getString(TAG_BOOK)), this.entry.getId(), this.id).send();
         }
     }
 

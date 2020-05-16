@@ -4,13 +4,14 @@ import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
 import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ALL;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Dist.CLIENT)
 public class NearStructHandler {
     public static double time = 0;
 
