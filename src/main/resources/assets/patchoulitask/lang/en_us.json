@@ -12,5 +12,6 @@
   "patchouliquests.task.near_pos.y": "Y: %d",
   "patchouliquests.task.near_pos.z": "Z: %d",
   "patchouliquests.task.near_pos.range": "Range: %d",
-  "patchouliquests.tooltip.item.get": "Click to get reward."
+  "patchouliquests.tooltip.item.get": "Click to get reward.",
+  "patchouliquests.task.near_struct.find": "Find struct: %s"
 }

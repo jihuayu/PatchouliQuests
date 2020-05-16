@@ -7,14 +7,15 @@ import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.S2CCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
-import jihuayu.patchoulitask.net.nearpostition.C2SNearPositionTaskCheckPacket;
+import jihuayu.patchoulitask.net.near.C2SNearPositionTaskCheckPacket;
+import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
 import jihuayu.patchoulitask.task.NearPositionTaskPage;
+import jihuayu.patchoulitask.task.NearStructTaskPage;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -30,6 +31,7 @@ public class ModMain {
     static {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_position_task", NearPositionTaskPage.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put("near_struct_task", NearStructTaskPage.class);
     }
 
     public ModMain() {
@@ -42,6 +44,7 @@ public class ModMain {
         NetworkChannel.register(S2CHideTaskPacket.class, new S2CHideTaskPacket.Handler());
         NetworkChannel.register(C2SNearPositionTaskCheckPacket.class, new C2SNearPositionTaskCheckPacket.Handler());
         NetworkChannel.register(C2SRewardGetPacket.class, new C2SRewardGetPacket.Handler());
+        NetworkChannel.register(C2SNearStructTaskCheckPacket.class, new C2SNearStructTaskCheckPacket.Handler());
     }
     @SubscribeEvent
     protected static void serverInit(FMLServerStartingEvent event) {
