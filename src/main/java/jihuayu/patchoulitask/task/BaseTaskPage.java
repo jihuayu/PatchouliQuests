@@ -190,7 +190,8 @@ public class BaseTaskPage extends PageQuest {
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             List<ITextComponent> list = new ArrayList<>();
             for (String i : commands) {
-                list.add(new StringTextComponent(i).setStyle(new Style().setColor(TextFormatting.YELLOW)));
+                if (!i.startsWith("#"))
+                    list.add(new StringTextComponent(i).setStyle(new Style().setColor(TextFormatting.YELLOW)));
             }
             parent.setTooltip(list);
         }

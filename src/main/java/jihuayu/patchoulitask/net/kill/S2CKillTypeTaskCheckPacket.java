@@ -2,7 +2,7 @@ package jihuayu.patchoulitask.net.kill;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.task.BaseTaskPage;
-import jihuayu.patchoulitask.task.kill.KillTypeTask;
+import jihuayu.patchoulitask.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.network.PacketBuffer;
@@ -68,12 +68,12 @@ public class S2CKillTypeTaskCheckPacket extends Packet {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 BookPage i = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
-                if (i instanceof KillTypeTask) {
+                if (i instanceof KillTypeTaskPage) {
                     ((BaseTaskPage) i).stats = message.ok ? 1 : -1;
                     ((BaseTaskPage) i).lock = message.lock;
                     ((BaseTaskPage) i).hide = message.hide;
                     ((BaseTaskPage) i).reward_stats = message.reward;
-                    ((KillTypeTask) i).now_num = message.num;
+                    ((KillTypeTaskPage) i).now_num = message.num;
                 }
             });
             ctx.get().setPacketHandled(true);

@@ -5,8 +5,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import jihuayu.patchoulitask.net.S2CHideTaskPacket;
-import jihuayu.patchoulitask.net.S2CLockTaskPacket;
+import jihuayu.patchoulitask.net.S2CTaskCheckPacket;
+import jihuayu.patchoulitask.net.cmd.S2CCompleteTaskPacket;
+import jihuayu.patchoulitask.net.cmd.S2CHideTaskPacket;
+import jihuayu.patchoulitask.net.cmd.S2CLockTaskPacket;
 import jihuayu.patchoulitask.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.command.CommandSource;
@@ -21,6 +23,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.item.ItemModBook;
+
+import java.util.ArrayList;
 
 import static jihuayu.patchoulitask.comand.arguments.TSuggestionProviders.AVAILABLE_BOOKS;
 import static jihuayu.patchoulitask.comand.arguments.TSuggestionProviders.AVAILABLE_ENTRIES;
@@ -61,6 +65,16 @@ public class LockAndHideCommand {
                                                     ResourceLocationArgument.getResourceLocation(ctx, "entry"),
                                                     IntegerArgumentType.getInteger(ctx, "id"), ctx, false);
                                         }))
+                                        .then(Commands.literal("complete").executes((ctx) -> {
+                                            return complete(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
+                                                    ResourceLocationArgument.getResourceLocation(ctx, "entry"),
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, true);
+                                        }))
+                                        .then(Commands.literal("reset").executes((ctx) -> {
+                                            return reset(EntityArgument.getPlayer(ctx, "player"), ResourceLocationArgument.getResourceLocation(ctx, "book"),
+                                                    ResourceLocationArgument.getResourceLocation(ctx, "entry"),
+                                                    IntegerArgumentType.getInteger(ctx, "id"), ctx, false);
+                                        }))
 
                                 )))));
     }
@@ -90,6 +104,48 @@ public class LockAndHideCommand {
                     if (BookNBTHelper.isHide(player, book.toString(), entry.toString(), id) != hide) {
                         BookNBTHelper.setHide(player, book.toString(), entry.toString(), id, hide);
                         new S2CHideTaskPacket(book, entry, id, hide).send((ServerPlayerEntity) player);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            player.sendMessage(new TranslationTextComponent("patchouliquests.command.failed").setStyle(new Style().setColor(TextFormatting.RED)));
+        }
+        return 0;
+    }
+
+    public static int complete(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean complete) throws CommandSyntaxException {
+        try {
+            if (player instanceof ServerPlayerEntity) {
+                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(id);
+                if (page1 instanceof BaseTaskPage) {
+                    if (BookNBTHelper.isOver(player, book.toString(), entry.toString(), id) != complete) {
+                        BookNBTHelper.setOver(player, book.toString(), entry.toString(), id, complete);
+                        new S2CCompleteTaskPacket(book, entry, id, complete).send((ServerPlayerEntity) player);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            player.sendMessage(new TranslationTextComponent("patchouliquests.command.failed").setStyle(new Style().setColor(TextFormatting.RED)));
+        }
+        return 0;
+    }
+
+    public static int reset(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean complete) throws CommandSyntaxException {
+        try {
+            if (player instanceof ServerPlayerEntity) {
+                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(id);
+                if (page1 instanceof BaseTaskPage) {
+                    if (BookNBTHelper.isOver(player, book.toString(), entry.toString(), id) != complete) {
+                        BookNBTHelper.setOver(player, book.toString(), entry.toString(), id, complete);
+                        boolean hide = BookNBTHelper.isHide(player, book.toString(), entry.toString(), id);
+                        boolean lock = BookNBTHelper.isLock(player, book.toString(), entry.toString(), id);
+                        ArrayList<Boolean> list = new ArrayList<>();
+                        for (int j = 0; j < ((BaseTaskPage) page1).reward.size(); j++) {
+                            list.add(false);
+                            BookNBTHelper.setRewardStats(player, book.toString(), entry.toString(), id, j,false);
+                        }
+                        new S2CTaskCheckPacket(book, entry, false, id, hide, lock, list).send((ServerPlayerEntity) player);
+
                     }
                 }
             }

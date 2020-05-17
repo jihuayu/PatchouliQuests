@@ -3,6 +3,8 @@ package jihuayu.patchoulitask;
 import com.mojang.brigadier.CommandDispatcher;
 import jihuayu.patchoulitask.comand.LockAndHideCommand;
 import jihuayu.patchoulitask.net.*;
+import jihuayu.patchoulitask.net.cmd.S2CHideTaskPacket;
+import jihuayu.patchoulitask.net.cmd.S2CLockTaskPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskCheckPacket;
 import jihuayu.patchoulitask.net.collect.C2SCollectTaskSyncPacket;
 import jihuayu.patchoulitask.net.collect.S2CCollectTaskCheckPacket;
@@ -12,12 +14,13 @@ import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.near.C2SNearPositionTaskCheckPacket;
 import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
 import jihuayu.patchoulitask.task.CollectTaskPage;
-import jihuayu.patchoulitask.task.kill.KillTypeTask;
+import jihuayu.patchoulitask.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import jihuayu.patchoulitask.task.near.NearStructTaskPage;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +39,7 @@ public class ModMain {
         ClientBookRegistry.INSTANCE.pageTypes.put("collect_task", CollectTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_position_task", NearPositionTaskPage.class);
         ClientBookRegistry.INSTANCE.pageTypes.put("near_struct_task", NearStructTaskPage.class);
-        ClientBookRegistry.INSTANCE.pageTypes.put("kill_entity_task", KillTypeTask.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put("kill_entity_task", KillTypeTaskPage.class);
     }
 
     public ModMain() {
@@ -49,6 +52,7 @@ public class ModMain {
         NetworkChannel.register(C2STaskSyncPacket.class, new C2STaskSyncPacket.Handler());
         NetworkChannel.register(C2SKillTypeTaskSyncPacket.class, new C2SKillTypeTaskSyncPacket.Handler());
 
+        ModMain.LOGGER.debug(MOD_ID+" init in "+EffectiveSide.get());
 
         NetworkChannel.register(S2CTaskCheckPacket.class, new S2CTaskCheckPacket.Handler());
         NetworkChannel.register(S2CCollectTaskCheckPacket.class, new S2CCollectTaskCheckPacket.Handler());

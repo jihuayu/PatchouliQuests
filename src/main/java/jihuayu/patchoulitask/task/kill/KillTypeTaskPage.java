@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class KillTypeTask extends BaseTaskPage {
-    public transient static final List<KillTypeTask> LISTS = new ArrayList<>();
+public class KillTypeTaskPage extends BaseTaskPage {
+    public transient static final List<KillTypeTaskPage> LISTS = new ArrayList<>();
 
     public transient Entity entity;
     public transient Function<World, Entity> creator;

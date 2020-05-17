@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.handler;
 
-import jihuayu.patchoulitask.task.kill.KillTypeTask;
+import jihuayu.patchoulitask.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -12,6 +12,6 @@ public class TagsUpdatedHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onTagsUpdatedEvent(TagsUpdatedEvent event) {
         NearPositionTaskPage.LISTS.clear();
-        KillTypeTask.LISTS.clear();
+        KillTypeTaskPage.LISTS.clear();
     }
 }

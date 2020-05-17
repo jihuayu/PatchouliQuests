@@ -1,7 +1,7 @@
 package jihuayu.patchoulitask.handler;
 
 import jihuayu.patchoulitask.net.kill.S2CKillTypeTaskCheckPacket;
-import jihuayu.patchoulitask.task.kill.KillTypeTask;
+import jihuayu.patchoulitask.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +17,7 @@ public class PlayerKillHandler {
     public static void onLivingDeathEvent(LivingDeathEvent event) {
         Entity p2 = event.getSource().getTrueSource();
         Entity d = event.getEntity();
-        for (KillTypeTask i : KillTypeTask.LISTS) {
+        for (KillTypeTaskPage i : KillTypeTaskPage.LISTS) {
             if (i.name.equals(d.getType().getRegistryName().toString())) {
                 if (p2 != null) {
                     test(p2, i);
@@ -26,7 +26,7 @@ public class PlayerKillHandler {
         }
     }
 
-    private static void test(Entity p2, KillTypeTask i) {
+    private static void test(Entity p2, KillTypeTaskPage i) {
         if (p2 instanceof PlayerEntity) {
             System.out.println(p2);
             System.out.println(i.book.id);

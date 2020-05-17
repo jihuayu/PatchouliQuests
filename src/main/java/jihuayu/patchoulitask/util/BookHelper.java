@@ -14,8 +14,15 @@ public class BookHelper {
     public static void complete(ServerPlayerEntity player, BaseTaskPage i) {
         if (!(i).finishCmd.isEmpty()) {
             for (String pp : (i).finishCmd) {
+                String cmd = "";
+                if (pp.startsWith("/")){
+                    cmd = pp.substring(1);
+                }
+                if (cmd.startsWith("#")){
+                    cmd = cmd.substring(1);
+                }
                 try {
-                    ModMain.COMMANDS.execute(pp, new CommandSource(player, new Vec3d(player.getX(), player.getY(), player.getZ())
+                    ModMain.COMMANDS.execute(cmd, new CommandSource(player, new Vec3d(player.getX(), player.getY(), player.getZ())
                             , player.getPitchYaw(),
                             (ServerWorld) player.world, 99, "", new StringTextComponent(""), player.server, player));
                 } catch (CommandSyntaxException e) {

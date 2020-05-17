@@ -13,7 +13,6 @@ import java.util.List;
 public class NearStructTaskPage extends BaseTaskPage {
     public transient static final List<NearStructTaskPage> POSES = new ArrayList<>();
 
-
     public String struct;
 
     public double range;
