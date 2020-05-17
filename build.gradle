@@ -101,7 +101,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.15.2-31.0.14'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
     compile fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
     compile fg.deobf("curse.maven:patchouli:2945108")
 

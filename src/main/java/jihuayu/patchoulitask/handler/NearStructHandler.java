@@ -1,7 +1,7 @@
 package jihuayu.patchoulitask.handler;
 
-import jihuayu.patchoulitask.net.near.C2SNearStructTaskCheckPacket;
-import jihuayu.patchoulitask.task.near.NearPositionTaskPage;
+import jihuayu.patchoulitask.old.net.near.C2SNearStructTaskCheckPacket;
+import jihuayu.patchoulitask.old.task.near.NearPositionTaskPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;

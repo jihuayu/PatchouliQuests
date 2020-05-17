@@ -2,8 +2,8 @@ package jihuayu.patchoulitask.util;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import jihuayu.patchoulitask.ModMain;
-import jihuayu.patchoulitask.task.BaseTaskPage;
-import jihuayu.patchoulitask.task.CollectTaskPage;
+import jihuayu.patchoulitask.old.task.BaseTaskPage;
+import jihuayu.patchoulitask.old.task.CollectTaskPage;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;

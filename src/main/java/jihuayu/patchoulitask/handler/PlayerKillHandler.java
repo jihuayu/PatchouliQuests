@@ -1,7 +1,7 @@
 package jihuayu.patchoulitask.handler;
 
-import jihuayu.patchoulitask.net.kill.S2CKillTypeTaskCheckPacket;
-import jihuayu.patchoulitask.task.kill.KillTypeTaskPage;
+import jihuayu.patchoulitask.old.net.kill.S2CKillTypeTaskCheckPacket;
+import jihuayu.patchoulitask.old.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

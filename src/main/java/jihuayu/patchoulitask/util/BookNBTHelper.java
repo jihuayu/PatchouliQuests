@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.util;
 
-import jihuayu.patchoulitask.task.BaseTaskPage;
+import jihuayu.patchoulitask.old.task.BaseTaskPage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.ListNBT;
 import vazkii.patchouli.client.book.BookPage;

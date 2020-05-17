@@ -1,8 +1,8 @@
 {
   "patchouliquests.task.submit": "Submit",
   "patchouliquests.task.over": "Completed",
-  "patchouliquests.task.reward": "Reward:",
-  "patchouliquests.task.need": "Need:",
+  "patchouliquests.task.reward": "Reward:(%d/%d)",
+  "patchouliquests.task.need": "Need:(%d/%d)",
   "patchouliquests.tooltip.item.num": "Count:",
   "patchouliquests.tooltip.item.consume": "Will consume items.",
   "patchouliquests.task.lock": "Locked",

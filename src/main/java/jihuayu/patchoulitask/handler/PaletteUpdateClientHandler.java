@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.handler;
 
-import jihuayu.patchoulitask.net.C2SPaletteSyncPacket;
+import jihuayu.patchoulitask.old.net.C2SPaletteSyncPacket;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
