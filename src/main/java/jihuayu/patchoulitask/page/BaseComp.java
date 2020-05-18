@@ -1,10 +1,11 @@
 package jihuayu.patchoulitask.page;
 
+import jihuayu.patchoulitask.api.MouseHandler;
 import jihuayu.patchoulitask.api.PageComp;
 import jihuayu.patchoulitask.api.RenderAble;
 import net.minecraft.client.gui.widget.button.Button;
 
-public class BaseComp implements RenderAble, PageComp {
+public abstract class BaseComp implements RenderAble, PageComp, MouseHandler {
     public transient PageBaseQuest page;
     public transient int num;
 
@@ -31,5 +32,10 @@ public class BaseComp implements RenderAble, PageComp {
     @Override
     public void setPage(PageBaseQuest page) {
         this.page = page;
+    }
+
+    @Override
+    public boolean onMouse(double mouseX, double mouseY, double scroll) {
+        return false;
     }
 }

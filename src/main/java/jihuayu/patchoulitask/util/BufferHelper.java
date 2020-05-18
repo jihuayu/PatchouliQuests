@@ -46,9 +46,9 @@ public class BufferHelper {
         return list;
     }
 
-    public static void writeList(PacketBuffer buffer, WriteFunction fn, List<?> list) {
+    public static <T> void writeList(PacketBuffer buffer, WriteFunction fn, List<T> list) {
         buffer.writeVarInt(list.size());
-        for (Object i : list) {
+        for (T i : list) {
             fn.apply(buffer, i);
         }
     }
@@ -59,8 +59,8 @@ public class BufferHelper {
     }
 
     @FunctionalInterface
-    public static interface WriteFunction {
-        void apply(PacketBuffer buffer, Object list);
+    public static interface WriteFunction<T> {
+        void apply(PacketBuffer buffer, T list);
     }
 
     public static class TaskRead {

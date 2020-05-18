@@ -141,7 +141,6 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
     public boolean onMouse(double mouseX, double mouseY, double scroll) {
         if (hide) return false;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
-            System.out.println(99999);
             if (scroll < 0 ) {
                 if (now_reward_page > 0)
                     now_reward_page--;

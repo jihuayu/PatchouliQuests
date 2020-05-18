@@ -16,5 +16,9 @@
   "patchouliquests.task.near_struct.find": "Find struct: %s",
   "patchouliquests.task.kill.now": "%d / %d",
   "patchouliquests.task.kill.text": "Kill ",
-  "patchouliquests.task.kill.count": "Count: %d / %d"
+  "patchouliquests.task.kill.count": "Count: %d / %d",
+  "patchouliquests.tooltip.item.get.random": "Click to get random reward.",
+  "patchouliquests.tooltip.item.get.more": "Shift + click to get the reward.",
+  "patchouliquests.tooltip.item.alread_get": "Already get reward.",
+  "patchouliquests.tooltip.item.change.more": "Shift + wheel to change the reward."
 }
