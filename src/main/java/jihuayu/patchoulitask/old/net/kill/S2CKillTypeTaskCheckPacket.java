@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.old.net.kill;
 
-import jihuayu.patchoulitask.old.net.kiwi.Packet;
+import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
 import jihuayu.patchoulitask.old.task.kill.KillTypeTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;

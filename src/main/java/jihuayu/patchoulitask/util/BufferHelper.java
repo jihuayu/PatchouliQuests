@@ -23,7 +23,18 @@ public class BufferHelper {
         buffer.writeVarInt(page);
 
     }
+    public static void writeTask(PacketBuffer buffer, ResourceLocation book, ResourceLocation entry) {
+        if (!BOOK_LIST.contains(book) || PALETTE_LIST.get(book) == null || !PALETTE_LIST.get(book).contains(entry)) {
+            buffer.writeBoolean(false);
+            buffer.writeResourceLocation(book);
+            buffer.writeResourceLocation(entry);
+        } else {
+            buffer.writeBoolean(true);
+            buffer.writeVarInt(BOOK_LIST.indexOf(book));
+            buffer.writeVarInt(PALETTE_LIST.get(book).indexOf(entry));
+        }
 
+    }
     public static TaskRead readTaskId(PacketBuffer buffer) {
         TaskRead tr = new TaskRead();
         if (buffer.readBoolean()) {
@@ -36,7 +47,17 @@ public class BufferHelper {
         tr.id = buffer.readVarInt();
         return tr;
     }
-
+    public static TaskRead readTask(PacketBuffer buffer) {
+        TaskRead tr = new TaskRead();
+        if (buffer.readBoolean()) {
+            tr.book = BOOK_LIST.get(buffer.readVarInt());
+            tr.entry = PALETTE_LIST.get(tr.book).get(buffer.readVarInt());
+        } else {
+            tr.book = buffer.readResourceLocation();
+            tr.entry = buffer.readResourceLocation();
+        }
+        return tr;
+    }
     public static <T> List<T> readList(PacketBuffer buffer, ReadFunction fn, T p) {
         int num = buffer.readVarInt();
         List<T> list = new ArrayList<>();

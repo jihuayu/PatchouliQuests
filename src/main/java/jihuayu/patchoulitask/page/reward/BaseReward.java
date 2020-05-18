@@ -9,7 +9,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.lang.reflect.Type;
 
-public class BaseReward extends BaseComp {
+public abstract class BaseReward extends BaseComp {
     public static class Deserializer implements JsonDeserializer<BaseReward> {
         public BaseReward deserialize(JsonElement json, Type type1, JsonDeserializationContext ctx) throws JsonParseException {
             if (json instanceof JsonObject) {

@@ -1,8 +1,8 @@
-package jihuayu.patchoulitask.old.net;
+package jihuayu.patchoulitask.net;
 
 //import jihuayu.patchoulitask.handler.PaletteUpdateHandler;
 
-import jihuayu.patchoulitask.old.net.kiwi.Packet;
+import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.util.PaletteHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

@@ -3,14 +3,18 @@ package jihuayu.patchoulitask.page;
 import com.google.gson.*;
 import jihuayu.patchoulitask.ModMain;
 import jihuayu.patchoulitask.api.MouseHandler;
+import jihuayu.patchoulitask.api.NetComp;
 import jihuayu.patchoulitask.api.PageComp;
 import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.task.BaseTask;
+import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -28,27 +32,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageBaseQuest extends PageQuest implements MouseHandler {
-    private static final ResourceLocation L_ARRAY = new ResourceLocation(ModMain.MOD_ID, "l_array");
-    private static final ResourceLocation R_ARRAY = new ResourceLocation(ModMain.MOD_ID, "r_array");
+public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
 
-    public transient int defaultTask = 0;
-    public transient int defaultReward = 0;
-    public transient boolean hide = false;
-    public transient boolean lock = false;
+    public boolean hide = false;
+    public boolean lock = false;
+    public int stats = 0;
+
     public transient boolean is_hide = false;
-    public transient int stats = 0;
     public transient int now_task_page = 0;
     public transient int now_reward_page = 0;
     protected transient Button button;
 
     public static final int rewardPrePage = 4;
 
-    public List<BaseTask> tasks = new ArrayList<>();
-    public List<BaseReward> rewards = new ArrayList<>();
-    public boolean defaultHide = false;
-    public boolean defaultLock = false;
-    public int id;
+    public transient List<BaseTask> tasks = new ArrayList<>();
+    public transient List<BaseReward> rewards = new ArrayList<>();
+    public transient boolean defaultHide = false;
+    public transient boolean defaultLock = false;
+    public transient int id;
 
     public BookEntry getEntry() {
         return entry;
@@ -251,5 +252,46 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
                 }
             }
         }
+    }
+    public int getStats(PlayerEntity playerEntity) {
+        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.stats",
+                book.id.toString(), getEntry().getId().toString(), id), 0);
+    }
+
+    public void setStats(PlayerEntity playerEntity, int stats) {
+        NBTHelper.of(playerEntity.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.stats",
+                book.id.toString(), getEntry().getId().toString(), id), stats);
+    }
+
+    public boolean getHide(PlayerEntity playerEntity) {
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.hide",
+                book.id.toString(), getEntry().getId().toString(), id), false);
+    }
+
+    public void setHide(PlayerEntity playerEntity, boolean hide) {
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.hide",
+                book.id.toString(), getEntry().getId().toString(), id), hide);
+    }
+
+    public boolean getLock(PlayerEntity playerEntity) {
+        return NBTHelper.of(playerEntity.getPersistentData()).getBoolean(String.format("patchouliquests.%s.%s.%d.lock",
+                book.id.toString(), getEntry().getId().toString(), id), false);
+    }
+
+    public void setLock(PlayerEntity playerEntity, boolean hide) {
+        NBTHelper.of(playerEntity.getPersistentData()).setBoolean(String.format("patchouliquests.%s.%s.%d.lock",
+                book.id.toString(), getEntry().getId().toString(), id), hide);
+    }
+
+    public void readBuffer(PacketBuffer buffer){
+        stats = buffer.readVarInt();
+        hide = buffer.readBoolean();
+        lock = buffer.readBoolean();
+    }
+
+    public void writeBuffer(PacketBuffer buffer){
+        buffer.writeVarInt(stats);
+        buffer.writeBoolean(hide);
+        buffer.writeBoolean(lock);
     }
 }

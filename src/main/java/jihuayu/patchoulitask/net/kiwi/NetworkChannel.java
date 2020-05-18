@@ -1,5 +1,5 @@
 //from kiwi
-package jihuayu.patchoulitask.old.net.kiwi;
+package jihuayu.patchoulitask.net.kiwi;
 
 import com.google.common.collect.Maps;
 import net.minecraft.entity.player.ServerPlayerEntity;

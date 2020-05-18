@@ -9,14 +9,11 @@ function initializeCoreMod() {
                 'name': 'vazkii/patchouli/common.util/SerializationUtil'
             },
             'transformer': function (cn) {
-                //遍历ClassNode下的methods
                 cn.fields.forEach(function (mn) {
                     if (mn.name === 'RAW_GSON' || mn.name === 'PRETTY_GSON') {
                         mn.access -= Opcodes.ACC_FINAL;
                     }
                 });
-
-                //返回修改后的ClassNode对象
                 return cn;
             }
         }

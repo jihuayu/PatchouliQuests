@@ -10,7 +10,7 @@ import net.minecraft.client.gui.widget.button.Button;
 
 import java.lang.reflect.Type;
 
-public class BaseTask extends BaseComp {
+public abstract class BaseTask extends BaseComp {
     public static class Deserializer implements JsonDeserializer<BaseTask> {
         public BaseTask deserialize(JsonElement json, Type type1, JsonDeserializationContext ctx) throws JsonParseException {
             if (json instanceof JsonObject) {

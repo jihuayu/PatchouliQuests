@@ -1,6 +1,7 @@
 package jihuayu.patchoulitask.util;
 
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
+import jihuayu.patchoulitask.page.PageBaseQuest;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.ListNBT;
 import vazkii.patchouli.client.book.BookPage;
@@ -81,10 +82,10 @@ public class BookNBTHelper {
         return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.num", book, entry, page), 0);
     }
 
-    public static BookPage getPage(List<BookPage> pages, int id) {
+    public static PageBaseQuest getPage(List<BookPage> pages, int id) {
         for (BookPage page : pages) {
-            if (page instanceof BaseTaskPage && ((BaseTaskPage) page).id == id) {
-                return page;
+            if (page instanceof PageBaseQuest && ((PageBaseQuest) page).id == id) {
+                return (PageBaseQuest) page;
             }
         }
         return null;

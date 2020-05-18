@@ -3,12 +3,14 @@ package jihuayu.patchoulitask.page.task;
 import com.google.gson.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.page.reward.ItemReward;
+import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -24,8 +26,8 @@ import java.util.Map;
 
 public class ItemTask extends BaseTask {
     public transient List<Ingredient> items = new ArrayList<>();
-    public transient List<Integer> items_num = new ArrayList<>();
-    public boolean consume = false;
+    public List<Integer> items_num = new ArrayList<>();
+    public transient boolean consume = false;
 
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
@@ -94,5 +96,15 @@ public class ItemTask extends BaseTask {
             }
         }
         return reward;
+    }
+
+    @Override
+    public void readBuffer(PacketBuffer buffer) {
+        this.items_num = BufferHelper.readList(buffer,(i,j)->j.add(i.readVarInt()),0);
+    }
+
+    @Override
+    public void writeBuffer(PacketBuffer buffer) {
+        BufferHelper.writeList(buffer,(i,j)->i.writeVarInt((int)j),items_num);
     }
 }

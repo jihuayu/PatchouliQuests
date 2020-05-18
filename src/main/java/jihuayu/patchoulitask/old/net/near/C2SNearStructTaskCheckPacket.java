@@ -2,7 +2,7 @@ package jihuayu.patchoulitask.old.net.near;
 
 
 import jihuayu.patchoulitask.old.net.S2CTaskCheckPacket;
-import jihuayu.patchoulitask.old.net.kiwi.ClientPacket;
+import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
 import jihuayu.patchoulitask.old.task.near.NearStructTaskPage;
 import jihuayu.patchoulitask.util.BookHelper;

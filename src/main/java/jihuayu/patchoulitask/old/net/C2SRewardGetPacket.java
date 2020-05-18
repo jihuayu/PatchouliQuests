@@ -1,6 +1,6 @@
 package jihuayu.patchoulitask.old.net;
 
-import jihuayu.patchoulitask.old.net.kiwi.ClientPacket;
+import jihuayu.patchoulitask.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.BufferHelper;

@@ -1,5 +1,5 @@
 //from kiwi
-package jihuayu.patchoulitask.old.net.kiwi;
+package jihuayu.patchoulitask.net.kiwi;
 
 public class ClientPacket extends Packet {
 
