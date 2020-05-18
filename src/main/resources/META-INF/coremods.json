@@ -1,5 +1,5 @@
 {
-  "A": "coremod/PageBaseQuest.js",
-  "B": "coremod/SerializationUtil.js",
-  "C": "coremod/SerializationUtil1.js"
+  "PageBaseQuest": "coremod/PageBaseQuest.js",
+  "SerializationUtil": "coremod/SerializationUtil.js",
+  "BookRegistry": "coremod/BookRegistry.js"
 }
