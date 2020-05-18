@@ -156,13 +156,14 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, 25, 24 * 4, 24 * 2)) {
             System.out.println(111);
             if (scroll < 0) {
-                if (now_task_page > 0)
-                    now_task_page--;
+
+                if (now_task_page < tasks.size() - 1)
+                    now_task_page++;
                 return true;
             }
             if (scroll > 0) {
-                if (now_task_page < tasks.size() - 1)
-                    now_task_page++;
+                if (now_task_page > 0)
+                    now_task_page--;
                 return true;
             }
         }
@@ -173,13 +174,14 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         if (hide) return -1;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_4) {
-                if (now_reward_page > 0)
-                    now_reward_page--;
+
+                if (now_reward_page < rewards.size() / rewardPrePage - 1)
+                    now_reward_page++;
                 return 1;
             }
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_5) {
-                if (now_reward_page < rewards.size() / rewardPrePage - 1)
-                    now_reward_page++;
+                if (now_reward_page > 0)
+                    now_reward_page--;
                 return 1;
             }
         }

@@ -13,6 +13,7 @@ import jihuayu.patchoulitask.old.net.cmd.S2CLockTaskPacket;
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
 import jihuayu.patchoulitask.page.PageBaseQuest;
 import jihuayu.patchoulitask.util.BookNBTHelper;
+import jihuayu.patchoulitask.worldstorage.TeamWorldSavedData;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -88,7 +89,7 @@ public class LockAndHideCommand {
                 if (page1 instanceof PageBaseQuest) {
                     if (((PageBaseQuest) page1).getLock(player) != lock) {
                         ((PageBaseQuest) page1).setLock(player,lock);
-                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
+                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player, TeamWorldSavedData.getTeamPlayers((ServerPlayerEntity) player));;
                     }
                 }
             }
@@ -105,7 +106,7 @@ public class LockAndHideCommand {
                 if (page1 instanceof PageBaseQuest) {
                     if (((PageBaseQuest) page1).getHide(player) != hide) {
                         ((PageBaseQuest) page1).setHide(player, hide);
-                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
+                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player, TeamWorldSavedData.getTeamPlayers((ServerPlayerEntity) player));;
                     }
                 }
             }
@@ -122,7 +123,7 @@ public class LockAndHideCommand {
                 System.out.println(page1);
                 if (page1 != null) {
                         (page1).setStats(player,1);
-                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
+                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player, TeamWorldSavedData.getTeamPlayers((ServerPlayerEntity) player));;
                     }
             }
         } catch (Exception e) {
@@ -140,7 +141,7 @@ public class LockAndHideCommand {
                         ((PageBaseQuest) page1).setStats(player, -1);
                         ((PageBaseQuest) page1).setHide(player,false);
                         ((PageBaseQuest) page1).setLock(player,false);
-                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
+                        new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player, TeamWorldSavedData.getTeamPlayers((ServerPlayerEntity) player));;
                 }
             }
         } catch (Exception e) {

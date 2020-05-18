@@ -7,6 +7,7 @@ import jihuayu.patchoulitask.page.task.ItemTask;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.BufferHelper;
 import jihuayu.patchoulitask.util.CheckUtil;
+import jihuayu.patchoulitask.worldstorage.TeamWorldSavedData;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -60,7 +61,8 @@ public class C2SItemTaskCheckPacket extends ClientPacket {
                     if (task instanceof ItemTask){
                         boolean ok = CheckUtil.checkTask(((ItemTask) task).items,player.container.getInventory(),((ItemTask) task).consume,((ItemTask) task).getItemsNum(player));
                         task.setStats(player,ok?1:-1);
-                        new S2CItemTaskPacket(message.book,message.entry,message.id,message.index, ((ItemTask) task).getItemsNum(player),ok).send(player);
+
+                        new S2CItemTaskPacket(message.book,message.entry,message.id,message.index, ((ItemTask) task).getItemsNum(player),ok).send(player,TeamWorldSavedData.getTeamPlayers(player));
                     }
                 }
             });

@@ -6,6 +6,7 @@ import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.reward.ItemReward;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.BufferHelper;
+import jihuayu.patchoulitask.worldstorage.TeamWorldSavedData;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -57,8 +58,8 @@ public class C2SItemRewardPacket extends ClientPacket {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
-                BookPage page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
-                if (page instanceof PageBaseQuest) {
+                PageBaseQuest page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
+                if (page != null) {
                     BaseReward reward = ((PageBaseQuest) page).rewards.get(message.index);
                     if (reward instanceof ItemReward) {
                         int ok = ((ItemReward) reward).getReceive(player);
@@ -66,7 +67,7 @@ public class C2SItemRewardPacket extends ClientPacket {
                             player.addItemStackToInventory(((ItemReward) reward).item.get(message.index2).copy());
                             ((ItemReward) reward).setReceive(player,1);
                         }
-                        new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1);
+                        new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1).send(player, TeamWorldSavedData.getTeamPlayers(player));
                     }
                 }
             });
