@@ -1,7 +1,6 @@
 package jihuayu.patchoulitask.page;
 
 import com.google.gson.*;
-import jihuayu.patchoulitask.ModMain;
 import jihuayu.patchoulitask.api.MouseHandler;
 import jihuayu.patchoulitask.api.NetComp;
 import jihuayu.patchoulitask.api.PageComp;
@@ -15,7 +14,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -188,28 +186,10 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
 
     protected boolean questButtonClicked1(Button button) {
         if (lock) return false;
+        if (tasks.get(now_task_page).stats > 0) return false;
+        tasks.get(now_task_page).tryComplete();
         return true;
     }
-
-    public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY, ItemStack stack, int ok) {
-        if (stack == null || stack.isEmpty()) {
-            return;
-        }
-
-        mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
-        mc.getItemRenderer().renderItemOverlays(fontRenderer, stack, x, y);
-        if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
-            List<ITextComponent> list = new ArrayList<>(stack.getTooltip(mc.player,
-                    mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
-            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
-                    .appendText(String.valueOf(stack.getCount())));
-            if (ok == 0)
-                list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get"));
-            parent.setTooltip(list);
-        }
-        RenderHelper.disableStandardItemLighting();
-    }
-
 
     public static class Deserializer implements JsonDeserializer<PageBaseQuest> {
         public PageBaseQuest deserialize(JsonElement json, Type type, JsonDeserializationContext ctx) throws JsonParseException {
@@ -253,6 +233,7 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
             }
         }
     }
+
     public int getStats(PlayerEntity playerEntity) {
         return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.stats",
                 book.id.toString(), getEntry().getId().toString(), id), 0);
@@ -283,13 +264,13 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
                 book.id.toString(), getEntry().getId().toString(), id), hide);
     }
 
-    public void readBuffer(PacketBuffer buffer){
+    public void readBuffer(PacketBuffer buffer) {
         stats = buffer.readVarInt();
         hide = buffer.readBoolean();
         lock = buffer.readBoolean();
     }
 
-    public void writeBuffer(PacketBuffer buffer){
+    public void writeBuffer(PacketBuffer buffer) {
         buffer.writeVarInt(stats);
         buffer.writeBoolean(hide);
         buffer.writeBoolean(lock);

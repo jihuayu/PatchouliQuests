@@ -11,6 +11,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import java.lang.reflect.Type;
 
 public abstract class BaseTask extends BaseComp {
+    public int stats = 0;
     public static class Deserializer implements JsonDeserializer<BaseTask> {
         public BaseTask deserialize(JsonElement json, Type type1, JsonDeserializationContext ctx) throws JsonParseException {
             if (json instanceof JsonObject) {
@@ -25,4 +26,6 @@ public abstract class BaseTask extends BaseComp {
             return null;
         }
     }
+
+    public abstract void tryComplete();
 }

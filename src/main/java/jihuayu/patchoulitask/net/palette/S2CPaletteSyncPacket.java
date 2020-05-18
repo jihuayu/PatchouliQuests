@@ -1,6 +1,5 @@
-package jihuayu.patchoulitask.net;
+package jihuayu.patchoulitask.net.palette;
 
-//import jihuayu.patchoulitask.handler.PaletteUpdateHandler;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.util.PaletteHelper;

@@ -1,4 +1,4 @@
-package jihuayu.patchoulitask.net.itemreward;
+package jihuayu.patchoulitask.net.reward.item;
 
 import jihuayu.patchoulitask.net.kiwi.Packet;
 import jihuayu.patchoulitask.page.PageBaseQuest;

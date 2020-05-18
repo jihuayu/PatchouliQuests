@@ -1,4 +1,4 @@
-package jihuayu.patchoulitask.net;
+package jihuayu.patchoulitask.net.palette;
 
 //import jihuayu.patchoulitask.handler.PaletteUpdateHandler;
 

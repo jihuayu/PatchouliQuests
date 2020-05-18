@@ -1,13 +1,18 @@
 package jihuayu.patchoulitask.page.task;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import jihuayu.patchoulitask.page.reward.ItemReward;
+import jihuayu.patchoulitask.net.task.item.C2SItemTaskCheckPacket;
+import jihuayu.patchoulitask.net.task.item.S2CItemTaskPacket;
 import jihuayu.patchoulitask.util.BufferHelper;
+import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
@@ -26,7 +31,7 @@ import java.util.Map;
 
 public class ItemTask extends BaseTask {
     public transient List<Ingredient> items = new ArrayList<>();
-    public List<Integer> items_num = new ArrayList<>();
+    public List<Integer> itemsNum = new ArrayList<>();
     public transient boolean consume = false;
 
     @Override
@@ -41,7 +46,7 @@ public class ItemTask extends BaseTask {
             page.mc.textureManager.bindTexture(page.book.craftingTexture);
             AbstractGui.blit(recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 83, 71, 24, 24, 128, 128);
             renderIngredientAndNumAndJEIWithOver(recipeX + (i % wrap) * 24 + 4, recipeY + (i / wrap) * 24 + 8, mouseX, mouseY, items.get(i),
-                    consume ? items_num.get(i) : -1);
+                    consume ? itemsNum.get(i) : -1);
         }
         return true;
     }
@@ -52,6 +57,7 @@ public class ItemTask extends BaseTask {
             renderItemStackAndNumAndJEIWithOver(x, y, mouseX, mouseY, stacks[(page.parent.ticksInBook / 20) % stacks.length], over);
         }
     }
+
     public void renderItemStackAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, ItemStack stack, int over) {
         if (stack == null || stack.isEmpty()) {
             return;
@@ -76,17 +82,17 @@ public class ItemTask extends BaseTask {
         if (json instanceof JsonObject) {
             JsonElement item = ((JsonObject) json).get("item");
             if (item != null) {
-                if (item instanceof JsonObject){
-                    Map<String,Double> map = ctx.deserialize(item, HashMap.class);
-                    for (String i : map.keySet()){
+                if (item instanceof JsonObject) {
+                    Map<String, Double> map = ctx.deserialize(item, HashMap.class);
+                    for (String i : map.keySet()) {
                         System.out.println(i);
                         System.out.println(map.get(i));
                         Ingredient is = ItemStackUtil.loadIngredientFromString(i);
-                        for (ItemStack j : is.getMatchingStacks()){
-                            j.setCount((int)(Math.round(map.get(i))));
+                        for (ItemStack j : is.getMatchingStacks()) {
+                            j.setCount((int) (Math.round(map.get(i))));
                         }
                         reward.items.add(is);
-                        reward.items_num.add(0);
+                        reward.itemsNum.add(0);
                     }
                 }
             }
@@ -100,11 +106,33 @@ public class ItemTask extends BaseTask {
 
     @Override
     public void readBuffer(PacketBuffer buffer) {
-        this.items_num = BufferHelper.readList(buffer,(i,j)->j.add(i.readVarInt()),0);
+        this.itemsNum = BufferHelper.readList(buffer, (i, j) -> j.add(i.readVarInt()), 0);
+        this.stats = buffer.readBoolean() ? 1 : -1;
     }
 
     @Override
     public void writeBuffer(PacketBuffer buffer) {
-        BufferHelper.writeList(buffer,(i,j)->i.writeVarInt((int)j),items_num);
+        BufferHelper.writeList(buffer, (i, j) -> i.writeVarInt((int) j), itemsNum);
+        buffer.writeBoolean(this.stats > 0);
+    }
+
+    public List<Integer> getItemsNum(ServerPlayerEntity player) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            int num1 = NBTHelper.of(player.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book, page.getEntry(), page.id, num, i), 0);
+            list.add(num1);
+        }
+        return list;
+    }
+
+    public void setItemsNum(ServerPlayerEntity player, List<Integer> list) {
+        for (int i = 0; i < list.size(); i++) {
+            NBTHelper.of(player.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book, page.getEntry(), page.id, num, i), list.get(i));
+        }
+    }
+
+    @Override
+    public void tryComplete() {
+        new C2SItemTaskCheckPacket(page.book.id,page.getEntry().getId(),page.id,num);
     }
 }
