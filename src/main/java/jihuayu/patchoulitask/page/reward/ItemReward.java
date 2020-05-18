@@ -21,10 +21,13 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemReward extends BaseReward {
 
+    public transient Map<ItemStack,Integer> items = new HashMap<>();
     public transient List<ItemStack> item = new ArrayList<>();
     public transient int receive = 0;
     public boolean random = false;
@@ -138,7 +141,11 @@ public class ItemReward extends BaseReward {
                         String itemSTack = i.getAsString();
                         reward.item.add(ItemStackUtil.loadStackFromString(itemSTack));
                     }
-                } else {
+                }
+                else if (item instanceof JsonObject){
+                    //todo:
+                }
+                else {
                     String itemStack = item.getAsString();
                     reward.item.add(ItemStackUtil.loadStackFromString(itemStack));
                 }

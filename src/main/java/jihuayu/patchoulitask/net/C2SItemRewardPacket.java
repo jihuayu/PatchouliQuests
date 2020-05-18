@@ -3,6 +3,9 @@ package jihuayu.patchoulitask.net;
 import jihuayu.patchoulitask.old.net.S2CTaskCheckPacket;
 import jihuayu.patchoulitask.old.net.kiwi.ClientPacket;
 import jihuayu.patchoulitask.old.task.BaseTaskPage;
+import jihuayu.patchoulitask.page.PageBaseQuest;
+import jihuayu.patchoulitask.page.reward.BaseReward;
+import jihuayu.patchoulitask.page.reward.ItemReward;
 import jihuayu.patchoulitask.util.BookNBTHelper;
 import jihuayu.patchoulitask.util.BufferHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -57,25 +60,16 @@ public class C2SItemRewardPacket extends ClientPacket {
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player == null) return;
                 BookPage page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
-                if (page instanceof BaseTaskPage) {
-                    if (!BookNBTHelper.hasHide(player, message.book.toString(), message.entry.toString(), message.id)) {
-                        BookNBTHelper.setHide(player, message.book.toString(), message.entry.toString(), message.id, ((BaseTaskPage) page).hide);
+                if (page instanceof PageBaseQuest) {
+                    BaseReward reward = ((PageBaseQuest) page).rewards.get(message.index);
+                    if (reward instanceof ItemReward) {
+                        int ok = ((ItemReward) reward).isReceive(player);
+                        if (ok==0){
+                            player.addItemStackToInventory(((ItemReward) reward).item.get(message.index2).copy());
+                            ((ItemReward) reward).setReceive(player,1);
+                        }
+                        new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1);
                     }
-                    if (!BookNBTHelper.hasLock(player, message.book.toString(), message.entry.toString(), message.id)) {
-                        BookNBTHelper.setLock(player, message.book.toString(), message.entry.toString(), message.id, ((BaseTaskPage) page).lock);
-                    }
-                    if (!BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, message.index)) {
-                        BookNBTHelper.setRewardStats(player, message.book.toString(), message.entry.toString(), message.id, message.index, true);
-                        player.addItemStackToInventory(((BaseTaskPage) page).reward.get(message.index).copy());
-                    }
-                    boolean over = BookNBTHelper.isOver(player, message.book.toString(), message.entry.toString(), message.id);
-                    boolean hide = BookNBTHelper.isHide(player, message.book.toString(), message.entry.toString(), message.id);
-                    boolean lock = BookNBTHelper.isLock(player, message.book.toString(), message.entry.toString(), message.id);
-                    ArrayList<Boolean> list = new ArrayList<>();
-                    for (int j = 0; j < ((BaseTaskPage) page).reward.size(); j++) {
-                        list.add(BookNBTHelper.getRewardStats(player, message.book.toString(), message.entry.toString(), message.id, j));
-                    }
-                    new S2CTaskCheckPacket(message.book, message.entry, over, message.id, hide, lock, list).send(player);
                 }
             });
             ctx.get().setPacketHandled(true);
