@@ -61,7 +61,7 @@ public class C2SItemRewardPacket extends ClientPacket {
                 if (page instanceof PageBaseQuest) {
                     BaseReward reward = ((PageBaseQuest) page).rewards.get(message.index);
                     if (reward instanceof ItemReward) {
-                        int ok = ((ItemReward) reward).isReceive(player);
+                        int ok = ((ItemReward) reward).getReceive(player);
                         if (ok==0){
                             player.addItemStackToInventory(((ItemReward) reward).item.get(message.index2).copy());
                             ((ItemReward) reward).setReceive(player,1);

@@ -9,6 +9,7 @@ import net.minecraft.network.PacketBuffer;
 
 public abstract class BaseComp implements RenderAble, PageComp, MouseHandler, NetComp {
     public transient PageBaseQuest page;
+    //from 0
     public transient int num;
 
     @Override
@@ -38,7 +39,7 @@ public abstract class BaseComp implements RenderAble, PageComp, MouseHandler, Ne
 
 
     @Override
-    public boolean onMouse(double mouseX, double mouseY, double scroll) {
+    public boolean onMouseWheel(double mouseX, double mouseY, double scroll) {
         return false;
     }
 }

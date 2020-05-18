@@ -18,14 +18,7 @@ import java.util.function.Supplier;
 public class S2CAllSyncPacket extends Packet {
     ResourceLocation book;
     ResourceLocation entry;
-    PageBaseQuest page;
     PacketBuffer buffer;
-
-    public S2CAllSyncPacket(ResourceLocation book, ResourceLocation entry, PageBaseQuest page) {
-        this.book = book;
-        this.entry = entry;
-        this.page = page;
-    }
 
     public S2CAllSyncPacket(ResourceLocation book, ResourceLocation entry, PacketBuffer buffer) {
         this.book = book;
@@ -38,21 +31,18 @@ public class S2CAllSyncPacket extends Packet {
         @Override
         public void encode(S2CAllSyncPacket msg, PacketBuffer buffer) {
             BufferHelper.writeTask(buffer, msg.book, msg.entry);
-            (msg.page).writeBuffer(buffer);
-            for (BaseTask k : (msg.page).tasks) {
-                k.writeBuffer(buffer);
-            }
-            for (BaseReward k : (msg.page).rewards) {
-                k.writeBuffer(buffer);
-            }
-            System.out.println(2222);
+            byte[] i = new byte[msg.buffer.readableBytes()];
+            System.out.println(msg.buffer.readableBytes());
+            System.out.println(i.length);
+            msg.buffer.readBytes(i);
+            buffer.writeBytes(i);
         }
 
         @Override
         public S2CAllSyncPacket decode(PacketBuffer buffer) {
             BufferHelper.TaskRead i = BufferHelper.readTask(buffer);
-            System.out.println(1111);
-            return new S2CAllSyncPacket(i.book, i.entry, new PacketBuffer(buffer));
+            System.out.println(buffer.readableBytes());
+            return new S2CAllSyncPacket(i.book, i.entry, (buffer));
         }
 
         @Override
@@ -64,9 +54,10 @@ public class S2CAllSyncPacket extends Packet {
                         System.out.println(entry);
                         for (BookPage page : entry.getPages()) {
                             if (page instanceof PageBaseQuest) {
-                                System.out.println(page);
                                 ((PageBaseQuest) page).readBuffer(message.buffer);
+                                System.out.println(1);
                                 for (BaseTask i : ((PageBaseQuest) page).tasks) {
+                                    System.out.println(2);
                                     i.readBuffer(message.buffer);
                                 }
                                 for (BaseReward i : ((PageBaseQuest) page).rewards) {

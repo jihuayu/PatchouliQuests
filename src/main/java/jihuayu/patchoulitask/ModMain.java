@@ -11,6 +11,8 @@ import jihuayu.patchoulitask.net.reward.item.S2CItemRewardPacket;
 import jihuayu.patchoulitask.net.kiwi.NetworkChannel;
 import jihuayu.patchoulitask.net.palette.C2SPaletteSyncPacket;
 import jihuayu.patchoulitask.net.palette.S2CPaletteSyncPacket;
+import jihuayu.patchoulitask.net.task.item.C2SItemTaskCheckPacket;
+import jihuayu.patchoulitask.net.task.item.S2CItemTaskPacket;
 import jihuayu.patchoulitask.page.PageBaseQuest;
 import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.task.BaseTask;
@@ -49,6 +51,8 @@ public class ModMain {
         NetworkChannel.register(S2CItemRewardPacket.class, new S2CItemRewardPacket.Handler());
         NetworkChannel.register(S2CPaletteSyncPacket.class, new S2CPaletteSyncPacket.Handler());
         NetworkChannel.register(S2CBasePagePacket.class, new S2CBasePagePacket.Handler());
+        NetworkChannel.register(C2SItemTaskCheckPacket.class, new C2SItemTaskCheckPacket.Handler());
+        NetworkChannel.register(S2CItemTaskPacket.class, new S2CItemTaskPacket.Handler());
 
         ModMain.LOGGER.info(MOD_ID + " init in " + EffectiveSide.get());
 

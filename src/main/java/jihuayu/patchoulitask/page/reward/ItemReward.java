@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
@@ -54,7 +55,7 @@ public class ItemReward extends BaseReward {
     }
 
     @Override
-    public boolean onMouse(double mouseX, double mouseY, double scroll) {
+    public boolean onMouseWheel(double mouseX, double mouseY, double scroll) {
         if (page.getParent().isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (scroll < 0) {
                 show_tick_index -= 20;
@@ -149,7 +150,7 @@ public class ItemReward extends BaseReward {
         }
         return reward;
     }
-    public int isReceive(PlayerEntity playerEntity) {
+    public int getReceive(PlayerEntity playerEntity) {
         return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.receive",
                 page.book.id.toString(), page.getEntry().getId().toString(), page.id, num), 0);
     }
@@ -165,8 +166,7 @@ public class ItemReward extends BaseReward {
     }
 
     @Override
-    public void writeBuffer(PacketBuffer buffer) {
-        buffer.writeVarInt(receive);
-
+    public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
+        buffer.writeVarInt(getReceive(entity));
     }
 }

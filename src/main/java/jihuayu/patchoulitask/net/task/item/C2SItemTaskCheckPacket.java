@@ -59,7 +59,8 @@ public class C2SItemTaskCheckPacket extends ClientPacket {
                     BaseTask task = page.tasks.get(message.index);
                     if (task instanceof ItemTask){
                         boolean ok = CheckUtil.checkTask(((ItemTask) task).items,player.container.getInventory(),((ItemTask) task).consume,((ItemTask) task).getItemsNum(player));
-                        new S2CItemTaskPacket(message.book,message.entry,message.id,message.index, ((ItemTask) task).getItemsNum(player),ok);
+                        task.setStats(player,ok?1:-1);
+                        new S2CItemTaskPacket(message.book,message.entry,message.id,message.index, ((ItemTask) task).getItemsNum(player),ok).send(player);
                     }
                 }
             });

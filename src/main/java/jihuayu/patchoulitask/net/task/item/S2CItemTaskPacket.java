@@ -59,8 +59,6 @@ public class S2CItemTaskPacket extends Packet {
         public void handle(S2CItemTaskPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
                 Book book = ItemModBook.getBook(ItemModBook.forBook(message.book));
-                ServerPlayerEntity player = ctx.get().getSender();
-                if (player == null) return;
                 PageBaseQuest page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (page != null) {
                     BaseTask task = page.tasks.get(message.index);

@@ -101,12 +101,11 @@ public class LockAndHideCommand {
     public static int hide(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean hide) throws CommandSyntaxException {
         try {
             if (player instanceof ServerPlayerEntity) {
-                BookPage page1 = ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages().get(id);
+                BookPage page1 =  BookNBTHelper.getPage(ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages(),id);
                 if (page1 instanceof PageBaseQuest) {
                     if (((PageBaseQuest) page1).getHide(player) != hide) {
                         ((PageBaseQuest) page1).setHide(player, hide);
                         new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
-
                     }
                 }
             }
@@ -119,10 +118,10 @@ public class LockAndHideCommand {
     public static int complete(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean complete) throws CommandSyntaxException {
         try {
             if (player instanceof ServerPlayerEntity) {
-                BookPage page1 =  BookNBTHelper.getPage(ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages(),id);
+                PageBaseQuest page1 =  BookNBTHelper.getPage(ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages(),id);
                 System.out.println(page1);
-                if (page1 instanceof PageBaseQuest) {
-                        ((PageBaseQuest) page1).setStats(player,1);
+                if (page1 != null) {
+                        (page1).setStats(player,1);
                         new S2CBasePagePacket(book, entry, id, ((PageBaseQuest) page1).getStats(player),((PageBaseQuest) page1).getHide(player), ((PageBaseQuest) page1).getLock(player)).send((ServerPlayerEntity) player);
                     }
             }
@@ -135,9 +134,9 @@ public class LockAndHideCommand {
     public static int reset(PlayerEntity player, ResourceLocation book, ResourceLocation entry, int id, CommandContext<CommandSource> source, boolean complete) throws CommandSyntaxException {
         try {
             if (player instanceof ServerPlayerEntity) {
-                BookPage page1 =  BookNBTHelper.getPage(ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages(),id);
+                PageBaseQuest page1 =  BookNBTHelper.getPage(ItemModBook.getBook(ItemModBook.forBook(book)).contents.entries.get(entry).getPages(),id);
 
-                if (page1 instanceof PageBaseQuest) {
+                if (page1 != null) {
                         ((PageBaseQuest) page1).setStats(player, -1);
                         ((PageBaseQuest) page1).setHide(player,false);
                         ((PageBaseQuest) page1).setLock(player,false);

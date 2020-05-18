@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.net.task.item.C2SItemTaskCheckPacket;
-import jihuayu.patchoulitask.net.task.item.S2CItemTaskPacket;
 import jihuayu.patchoulitask.util.BufferHelper;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.AbstractGui;
@@ -68,6 +67,10 @@ public class ItemTask extends BaseTask {
         if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             List<ITextComponent> list = new ArrayList<>(stack.getTooltip(page.mc.player,
                     page.mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
+            if (stats > 0 && list.size() > 0) {
+                list.get(0).setStyle(new Style().setColor(TextFormatting.GREEN));
+                list.add(new TranslationTextComponent("patchouliquests.task.item.over").setStyle(new Style().setColor(TextFormatting.GREEN)));
+            }
             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
                     .appendText(over >= 0 ? (over) + "/" : "" + (stack.getCount())));
             if (over >= 0)
@@ -85,8 +88,6 @@ public class ItemTask extends BaseTask {
                 if (item instanceof JsonObject) {
                     Map<String, Double> map = ctx.deserialize(item, HashMap.class);
                     for (String i : map.keySet()) {
-                        System.out.println(i);
-                        System.out.println(map.get(i));
                         Ingredient is = ItemStackUtil.loadIngredientFromString(i);
                         for (ItemStack j : is.getMatchingStacks()) {
                             j.setCount((int) (Math.round(map.get(i))));
@@ -108,18 +109,19 @@ public class ItemTask extends BaseTask {
     public void readBuffer(PacketBuffer buffer) {
         this.itemsNum = BufferHelper.readList(buffer, (i, j) -> j.add(i.readVarInt()), 0);
         this.stats = buffer.readBoolean() ? 1 : -1;
+        System.out.println(stats);
     }
 
     @Override
-    public void writeBuffer(PacketBuffer buffer) {
-        BufferHelper.writeList(buffer, (i, j) -> i.writeVarInt((int) j), itemsNum);
-        buffer.writeBoolean(this.stats > 0);
+    public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
+        BufferHelper.writeList(buffer, (i, j) -> i.writeVarInt((int) j), getItemsNum(entity));
+        buffer.writeBoolean(getStats(entity) > 0);
     }
 
     public List<Integer> getItemsNum(ServerPlayerEntity player) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
-            int num1 = NBTHelper.of(player.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book, page.getEntry(), page.id, num, i), 0);
+            int num1 = NBTHelper.of(player.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book.id, page.getEntry().getId(), page.id, num, i), 0);
             list.add(num1);
         }
         return list;
@@ -127,12 +129,12 @@ public class ItemTask extends BaseTask {
 
     public void setItemsNum(ServerPlayerEntity player, List<Integer> list) {
         for (int i = 0; i < list.size(); i++) {
-            NBTHelper.of(player.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book, page.getEntry(), page.id, num, i), list.get(i));
+            NBTHelper.of(player.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.%d.num.%d", page.book.id, page.getEntry().getId(), page.id, num, i), list.get(i));
         }
     }
 
     @Override
     public void tryComplete() {
-        new C2SItemTaskCheckPacket(page.book.id,page.getEntry().getId(),page.id,num);
+        new C2SItemTaskCheckPacket(page.book.id, page.getEntry().getId(), page.id, num).send();
     }
 }

@@ -1,5 +1,5 @@
 package jihuayu.patchoulitask.api;
 
 public interface MouseHandler {
-    boolean onMouse(double mouseX, double mouseY, double scroll);
+    boolean onMouseWheel(double mouseX, double mouseY, double scroll);
 }

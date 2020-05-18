@@ -17,6 +17,7 @@
   "patchouliquests.task.kill.now": "%d / %d",
   "patchouliquests.task.kill.text": "Kill ",
   "patchouliquests.task.kill.count": "Count: %d / %d",
+  "patchouliquests.task.item.over": "Already complete!",
   "patchouliquests.tooltip.item.get.random": "Click to get random reward.",
   "patchouliquests.tooltip.item.get.more": "Shift + click to get the reward.",
   "patchouliquests.tooltip.item.alread_get": "Already get reward.",

@@ -8,16 +8,10 @@ import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.task.BaseTask;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookEntry;
@@ -72,6 +66,14 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 25, 100, 20, "", this::questButtonClicked);
         addButton(button);
         updateButtonText(button);
+        int num = 0;
+        for (BaseTask i : tasks) {
+            if (i.stats > 0) {
+                num = i.num;
+                break;
+            }
+        }
+        now_task_page = num;
     }
 
     @Override
@@ -114,7 +116,11 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
             button.setMessage(I18n.format("patchouliquests.task.lock"));
             return;
         }
-        String s = I18n.format(stats > 0 ? "patchouliquests.task.over" : "patchouliquests.task.submit");
+        if (stats > 0) {
+            button.setMessage(I18n.format("patchouliquests.task.over"));
+            return;
+        }
+        String s = I18n.format(tasks.get(now_task_page).stats > 0 ? "patchouliquests.task.over" : "patchouliquests.task.submit");
         button.setMessage(s);
     }
 
@@ -133,7 +139,7 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     }
 
     @Override
-    public boolean onMouse(double mouseX, double mouseY, double scroll) {
+    public boolean onMouseWheel(double mouseX, double mouseY, double scroll) {
         if (hide) return false;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (scroll < 0) {
@@ -148,6 +154,7 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
             }
         }
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, 25, 24 * 4, 24 * 2)) {
+            System.out.println(111);
             if (scroll < 0) {
                 if (now_task_page > 0)
                     now_task_page--;
@@ -164,17 +171,17 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
 
     protected int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
         if (hide) return -1;
-        System.out.println(mouseButton);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_4) {
                 if (now_reward_page > 0)
                     now_reward_page--;
+                return 1;
             }
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_5) {
                 if (now_reward_page < rewards.size() / rewardPrePage - 1)
                     now_reward_page++;
+                return 1;
             }
-            return 1;
         }
         return 0;
     }
@@ -182,13 +189,32 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     @Override
     protected void questButtonClicked(Button button) {
         questButtonClicked1(button);
+        String res = entry.getId().toString();
+        PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(parent.book);
+        for (BaseTask i : tasks) {
+            if (i.stats < 1) {
+                if (data.completedManualQuests.contains(res)) {
+                    data.completedManualQuests.remove(res);
+                    PersistentData.save();
+                    updateButtonText(button);
+                    entry.markReadStateDirty();
+                }
+                return;
+            }
+
+        }
+        if (!data.completedManualQuests.contains(res)) {
+            data.completedManualQuests.add(res);
+        }
+        PersistentData.save();
+        updateButtonText(button);
+        entry.markReadStateDirty();
     }
 
-    protected boolean questButtonClicked1(Button button) {
-        if (lock) return false;
-        if (tasks.get(now_task_page).stats > 0) return false;
+    protected void questButtonClicked1(Button button) {
+        if (lock) return;
+        if (tasks.get(now_task_page).stats > 0) return;
         tasks.get(now_task_page).tryComplete();
-        return true;
     }
 
     public static class Deserializer implements JsonDeserializer<PageBaseQuest> {
@@ -270,9 +296,9 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         lock = buffer.readBoolean();
     }
 
-    public void writeBuffer(PacketBuffer buffer) {
-        buffer.writeVarInt(stats);
-        buffer.writeBoolean(hide);
-        buffer.writeBoolean(lock);
+    public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
+        buffer.writeVarInt(getStats(entity));
+        buffer.writeBoolean(getHide(entity));
+        buffer.writeBoolean(getLock(entity));
     }
 }
