@@ -27,15 +27,14 @@ import java.util.Map;
 
 public class ItemReward extends BaseReward {
 
+    //todo:
     public transient Map<ItemStack,Integer> items = new HashMap<>();
     public transient List<ItemStack> item = new ArrayList<>();
     public transient int receive = 0;
     public boolean random = false;
     public transient int show_tick_index;
     public transient int past_tick;
-    transient int index = num % PageBaseQuest.rewardPrePage;
-    transient int X = index * 24 + GuiBook.PAGE_WIDTH / 2 - 49;
-    transient int Y = GuiBook.PAGE_HEIGHT - 12 - 25 - 24;
+
 
     public int isReceive(PlayerEntity playerEntity) {
         return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.receive",
@@ -81,6 +80,9 @@ public class ItemReward extends BaseReward {
 
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
+        int index = num % PageBaseQuest.rewardPrePage;
+        int X = index * 24 + GuiBook.PAGE_WIDTH / 2 - 49;
+        int Y = GuiBook.PAGE_HEIGHT - 12 - 25 - 24;
         RenderSystem.enableBlend();
         RenderSystem.color4f(1F, 1F, 1F, 1F);
         page.mc.textureManager.bindTexture(page.book.craftingTexture);
@@ -90,7 +92,7 @@ public class ItemReward extends BaseReward {
     }
 
     public void renderItemStackAndNumAndGet(int x, int y, int mouseX, int mouseY) {
-        if (InputMappings.isKeyDown(page.mc.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        if (!InputMappings.isKeyDown(page.mc.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
             show_tick_index += (page.getParent().ticksInBook - past_tick);
         }
         page.getParent().ticksInBook = past_tick;
@@ -99,7 +101,7 @@ public class ItemReward extends BaseReward {
             return;
         }
 
-        page.mc.getItemRenderer().renderItemAndEffectIntoGUI(item.get((page.getParent().ticksInBook / 20) % item.size()), x, y);
+        page.mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
         page.mc.getItemRenderer().renderItemOverlays(page.fontRenderer, stack, x, y);
         if (page.getParent().isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             List<ITextComponent> list = new ArrayList<>(stack.getTooltip(page.mc.player,

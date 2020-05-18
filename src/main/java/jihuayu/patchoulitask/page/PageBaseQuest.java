@@ -6,7 +6,6 @@ import jihuayu.patchoulitask.api.MouseHandler;
 import jihuayu.patchoulitask.api.PageComp;
 import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.task.BaseTask;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +22,6 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.PageQuest;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 import java.lang.reflect.Type;
@@ -66,8 +64,6 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
         if (id == 0) {
             id = pageNum + 1;
         }
-        System.out.println(tasks.size());
-        System.out.println(rewards.size());
     }
 
     @Override
@@ -96,14 +92,14 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
         updateButtonText(button);
         int recipeY = 25;
         if (tasks.size() > 0) {
-            parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size()+ 1 ), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size() + 1)) / 2 + 4, recipeY - 6, book.textColor);
-            if (tasks.size() > now_reward_page)
+            parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size()), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size())) / 2 + 4, recipeY - 6, book.textColor);
+            if (tasks.size() > now_task_page)
                 tasks.get(now_task_page).render1(mouseX, mouseY, pticks);
         }
         recipeY = GuiBook.PAGE_HEIGHT - 24 - 12 - 25;
         if (rewards.size() > 0) {
-            parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size()+1) / rewardPrePage),
-                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size()+ 1) / rewardPrePage )) / 2 + 4, recipeY - 6, book.textColor);
+            parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size() - 1) / rewardPrePage + 1),
+                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size() - 1) / rewardPrePage + 1)) / 2 + 4, recipeY - 6, book.textColor);
             for (int i = now_reward_page * rewardPrePage; i < (now_reward_page + 1) * rewardPrePage; i++) {
                 if (rewards.size() > i) {
                     rewards.get(i).render1(mouseX, mouseY, pticks);
@@ -141,7 +137,7 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
     public boolean onMouse(double mouseX, double mouseY, double scroll) {
         if (hide) return false;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
-            if (scroll < 0 ) {
+            if (scroll < 0) {
                 if (now_reward_page > 0)
                     now_reward_page--;
                 return true;
@@ -152,13 +148,25 @@ public class PageBaseQuest extends PageQuest implements MouseHandler {
                 return true;
             }
         }
+        if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, 25, 24 * 4, 24 * 2)) {
+            if (scroll < 0) {
+                if (now_task_page > 0)
+                    now_task_page--;
+                return true;
+            }
+            if (scroll > 0) {
+                if (now_task_page < tasks.size() - 1)
+                    now_task_page++;
+                return true;
+            }
+        }
         return false;
     }
+
     protected int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
         if (hide) return -1;
         System.out.println(mouseButton);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
-            System.out.println(99999);
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_4) {
                 if (now_reward_page > 0)
                     now_reward_page--;

@@ -22,6 +22,7 @@ import jihuayu.patchoulitask.old.task.near.NearStructTaskPage;
 import jihuayu.patchoulitask.page.PageBaseQuest;
 import jihuayu.patchoulitask.page.reward.BaseReward;
 import jihuayu.patchoulitask.page.reward.ItemReward;
+import jihuayu.patchoulitask.page.task.BaseTask;
 import jihuayu.patchoulitask.util.ReflectHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ResourceLocation;
@@ -85,6 +86,7 @@ public class ModMain {
         return builder
                 .registerTypeHierarchyAdapter(PageBaseQuest.class, new PageBaseQuest.Deserializer())
                 .registerTypeHierarchyAdapter(BaseReward.class, new BaseReward.Deserializer())
+                .registerTypeHierarchyAdapter(BaseTask.class, new BaseTask.Deserializer())
                 .create();
     }
     @SubscribeEvent
