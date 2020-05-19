@@ -32,7 +32,6 @@ public class ItemReward extends BaseReward {
     //todo:
     public transient Map<ItemStack,Integer> items = new HashMap<>();
     public transient List<ItemStack> item = new ArrayList<>();
-    public int receive = 0;
     public transient boolean random = false;
     public int show_tick_index;
     public transient int past_tick;
@@ -150,23 +149,5 @@ public class ItemReward extends BaseReward {
         }
         return reward;
     }
-    public int getReceive(PlayerEntity playerEntity) {
-        return NBTHelper.of(playerEntity.getPersistentData()).getInt(String.format("patchouliquests.%s.%s.%d.%d.receive",
-                page.book.id.toString(), page.getEntry().getId().toString(), page.id, num), 0);
-    }
 
-    public void setReceive(PlayerEntity playerEntity, int receive) {
-        NBTHelper.of(playerEntity.getPersistentData()).setInt(String.format("patchouliquests.%s.%s.%d.%d.receive",
-                page.book.id.toString(), page.getEntry().getId().toString(), page.id, num), receive);
-    }
-
-    @Override
-    public void readBuffer(PacketBuffer buffer) {
-        receive = buffer.readVarInt();
-    }
-
-    @Override
-    public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
-        buffer.writeVarInt(getReceive(entity));
-    }
 }
