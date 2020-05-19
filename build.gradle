@@ -96,6 +96,10 @@ repositories {
         url = "https://dvs1.progwml6.com/files/maven"
     }
     maven { url 'https://maven.blamejared.com' }
+    maven {
+        name "yarn2mcp"
+        url "https://maven.tterrag.com/"
+    }
 }
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
