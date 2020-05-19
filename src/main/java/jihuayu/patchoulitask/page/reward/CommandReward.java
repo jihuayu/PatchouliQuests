@@ -12,16 +12,6 @@ import java.util.List;
 public class CommandReward extends BaseReward{
     public List<String> commands = new ArrayList<>();
 
-    @Override
-    public void readBuffer(PacketBuffer buffer) {
-
-    }
-
-    @Override
-    public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
-
-    }
-
     public static CommandReward deserialize(JsonElement json, Type type1, JsonDeserializationContext ctx) throws JsonParseException {
         CommandReward reward = new CommandReward();
         if (json instanceof JsonObject) {

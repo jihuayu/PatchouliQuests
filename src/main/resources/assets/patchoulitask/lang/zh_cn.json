@@ -1,8 +1,8 @@
 {
   "patchouliquests.task.submit": "提交任务",
   "patchouliquests.task.over": "任务完成",
-  "patchouliquests.task.reward": "奖励:",
-  "patchouliquests.task.need": "需要:",
+  "patchouliquests.task.reward": "奖励(%d/%d)：",
+  "patchouliquests.task.need": "任务(%d/%d)：",
   "patchouliquests.tooltip.item.num": "数量:",
   "patchouliquests.tooltip.item.consume": "将会消耗物品",
   "patchouliquests.task.lock": "锁定",
@@ -12,5 +12,16 @@
   "patchouliquests.task.near_pos.y": "Y: %d",
   "patchouliquests.task.near_pos.z": "Z: %d",
   "patchouliquests.task.near_pos.range": "范围: %d",
-  "patchouliquests.tooltip.item.get": "左键领取奖励"
+  "patchouliquests.tooltip.item.get": "左键领取奖励",
+  "patchouliquests.task.near_struct.find": "寻找建筑: %s",
+  "patchouliquests.task.kill.now": "%d / %d",
+  "patchouliquests.task.kill.text": "杀死 ",
+  "patchouliquests.task.kill.count": "数量: %d / %d",
+  "patchouliquests.task.item.over": "已经完成!",
+  "patchouliquests.tooltip.item.get.random": "点击获得随机奖励.",
+  "patchouliquests.tooltip.item.get.more": "Shift 左击领取奖励.",
+  "patchouliquests.tooltip.item.alread_get": "已经领取了奖励.",
+  "patchouliquests.tooltip.item.change.more": "Shift + 滚轮切换奖励.",
+  "patchouliquests.item_task.consume": "你需要拥有%s个%s",
+  "patchouliquests.item_task.no_consume": "你需要提交%s个%s"
 }

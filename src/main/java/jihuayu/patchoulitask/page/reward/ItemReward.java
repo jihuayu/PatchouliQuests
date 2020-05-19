@@ -2,6 +2,7 @@ package jihuayu.patchoulitask.page.reward;
 
 import com.google.gson.*;
 import com.mojang.blaze3d.systems.RenderSystem;
+import jihuayu.patchoulitask.net.reward.item.C2SItemRewardPacket;
 import jihuayu.patchoulitask.page.PageBaseQuest;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.AbstractGui;
@@ -39,9 +40,10 @@ public class ItemReward extends BaseReward {
     @Override
     public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
         if (page.getParent().isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
-            if (mouseButton < GLFW.GLFW_KEY_0 && page.stats > 0) {
-                show_tick_index -= 20;
-                //send packet
+            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_1 && page.stats > 0) {
+                if (item.size()>1&&!InputMappings.isKeyDown(page.mc.getWindow().getHandle(),GLFW.GLFW_KEY_LEFT_SHIFT))
+                    return 0;
+                new C2SItemRewardPacket(page.book.id,page.getEntry().getId(),page.id,num,(show_tick_index / 20) % item.size()).send();
                 return 1;
             }
         }

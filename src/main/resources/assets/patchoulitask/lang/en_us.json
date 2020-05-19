@@ -2,7 +2,7 @@
   "patchouliquests.task.submit": "Submit",
   "patchouliquests.task.over": "Completed",
   "patchouliquests.task.reward": "Reward:(%d/%d)",
-  "patchouliquests.task.need": "Need:(%d/%d)",
+  "patchouliquests.task.need": "Task:(%d/%d)",
   "patchouliquests.tooltip.item.num": "Count:",
   "patchouliquests.tooltip.item.consume": "Will consume items.",
   "patchouliquests.task.lock": "Locked",
@@ -21,5 +21,7 @@
   "patchouliquests.tooltip.item.get.random": "Click to get random reward.",
   "patchouliquests.tooltip.item.get.more": "Shift + click to get the reward.",
   "patchouliquests.tooltip.item.alread_get": "Already get reward.",
-  "patchouliquests.tooltip.item.change.more": "Shift + wheel to change the reward."
+  "patchouliquests.tooltip.item.change.more": "Shift + wheel to change the reward.",
+  "patchouliquests.item_task.consume": "You need have%s %s",
+  "patchouliquests.item_task.no_consume": "You need submit%s %s"
 }

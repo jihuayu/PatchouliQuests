@@ -39,7 +39,6 @@ public abstract class Packet {
                 ServerPlayerEntity p = player.server.getPlayerList().getPlayerByUUID(UUID.fromString(i.getString()));
 
                 if (p!=null){
-                    System.out.println(p.getName());
                     send(p);
                 }
             }

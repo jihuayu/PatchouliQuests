@@ -7,18 +7,17 @@ import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jihuayu.patchoulitask.net.task.item.C2SItemTaskCheckPacket;
 import jihuayu.patchoulitask.util.BufferHelper;
+import jihuayu.patchoulitask.util.JEIUtil;
 import jihuayu.patchoulitask.util.NBTHelper;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
@@ -32,6 +31,11 @@ public class ItemTask extends BaseTask {
     public transient List<Ingredient> items = new ArrayList<>();
     public List<Integer> itemsNum = new ArrayList<>();
     public transient boolean consume = false;
+
+    @Override
+    public String getDesc() {
+        return (consume?"patchouliquests.item_task.no_consume":"patchouliquests.item_task.consume");
+    }
 
     @Override
     public boolean render1(int mouseX, int mouseY, float pticks) {
@@ -49,7 +53,19 @@ public class ItemTask extends BaseTask {
         }
         return true;
     }
-
+    public int mouseClicked1(double mouseX, double mouseY, int mouseButton) {
+        int wrap = GuiBook.PAGE_WIDTH / 24;
+        int recipeX = GuiBook.PAGE_WIDTH / 2 - 49;
+        int recipeY = 25;
+        for (int i = 0; i < items.size(); i++) {
+            if (page.parent.isMouseInRelativeRange(mouseX, mouseY, recipeX + (i % wrap) * 24, recipeY + (i / wrap) * 24 + 4, 24, 24)) {
+                ItemStack[] stacks = items.get(i).getMatchingStacks();
+                JEIUtil.showRecipes(stacks[(page.parent.ticksInBook / 20) % stacks.length]);
+                return 1;
+            }
+        }
+        return 0;
+    }
     public void renderIngredientAndNumAndJEIWithOver(int x, int y, int mouseX, int mouseY, Ingredient ingr, int over) {
         ItemStack[] stacks = ingr.getMatchingStacks();
         if (stacks.length > 0) {
@@ -71,10 +87,13 @@ public class ItemTask extends BaseTask {
                 list.get(0).setStyle(new Style().setColor(TextFormatting.GREEN));
                 list.add(new TranslationTextComponent("patchouliquests.task.item.over").setStyle(new Style().setColor(TextFormatting.GREEN)));
             }
-            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.num").setStyle(new Style().setColor(TextFormatting.YELLOW))
-                    .appendText(over >= 0 ? (over) + "/" : "" + (stack.getCount())));
-            if (over >= 0)
-                list.add(new TranslationTextComponent("patchouliquests.tooltip.item.consume").setStyle(new Style().setColor(TextFormatting.RED)));
+            else {
+                list.add(new TranslationTextComponent(getDesc(),(over >= 0 ? (over) + "/" : "") + (stack.getCount()),stack.getDisplayName())
+                        .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+                if (over >= 0)
+                    list.add(new TranslationTextComponent("patchouliquests.tooltip.item.consume").setStyle(new Style().setColor(TextFormatting.RED)));
+            }
+
             page.parent.setTooltip(list);
         }
         RenderHelper.disableStandardItemLighting();

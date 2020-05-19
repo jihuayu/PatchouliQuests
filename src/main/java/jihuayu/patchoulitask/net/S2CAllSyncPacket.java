@@ -63,6 +63,7 @@ public class S2CAllSyncPacket extends Packet {
                                 for (BaseReward i : ((PageBaseQuest) page).rewards) {
                                     i.readBuffer(message.buffer);
                                 }
+                                ((PageBaseQuest) page).checkStats(book);
                             }
                         }
                     }

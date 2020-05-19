@@ -30,6 +30,8 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     public boolean lock = false;
     public int stats = 0;
 
+    public transient int mouseX = -1;
+    public transient int mouseY = -1;
     public transient boolean is_hide = false;
     public transient int now_task_page = 0;
     public transient int now_reward_page = 0;
@@ -80,6 +82,8 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     final public void render(int mouseX, int mouseY, float pticks) {
         super.render(mouseX, mouseY, pticks);
         render1(mouseX, mouseY, pticks);
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
     }
 
     protected boolean render1(int mouseX, int mouseY, float pticks) {
@@ -90,17 +94,20 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         }
         if (is_hide)
             addButton(button);
+        checkStats(parent.book);
         updateButtonText(button);
         int recipeY = 25;
         if (tasks.size() > 0) {
-            parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size()), fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size())) / 2 + 4, recipeY - 6, book.textColor);
+            parent.drawCenteredStringNoShadow( I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size()) ,
+                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.need", now_task_page + 1, tasks.size())) / 2 + 4, recipeY - 6, book.textColor);
             if (tasks.size() > now_task_page)
                 tasks.get(now_task_page).render1(mouseX, mouseY, pticks);
         }
         recipeY = GuiBook.PAGE_HEIGHT - 24 - 12 - 25;
         if (rewards.size() > 0) {
             parent.drawCenteredStringNoShadow(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size() - 1) / rewardPrePage + 1),
-                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size() - 1) / rewardPrePage + 1)) / 2 + 4, recipeY - 6, book.textColor);
+                    fontRenderer.getStringWidth(I18n.format("patchouliquests.task.reward", now_reward_page + 1, (rewards.size() - 1) / rewardPrePage + 1)) / 2 + 4,
+                    recipeY - 6, stats > 0 ? 0xff00ff00 : book.textColor);
             for (int i = now_reward_page * rewardPrePage; i < (now_reward_page + 1) * rewardPrePage; i++) {
                 if (rewards.size() > i) {
                     rewards.get(i).render1(mouseX, mouseY, pticks);
@@ -139,7 +146,7 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     }
 
     @Override
-    public boolean onMouseWheel(double mouseX, double mouseY, double scroll) {
+    public boolean onMouseWheel(double y, double x, double scroll) {
         if (hide) return false;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (scroll < 0) {
@@ -154,7 +161,6 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
             }
         }
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, 25, 24 * 4, 24 * 2)) {
-            System.out.println(111);
             if (scroll < 0) {
 
                 if (now_task_page < tasks.size() - 1)
@@ -174,14 +180,38 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
         if (hide) return -1;
         if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, GuiBook.PAGE_HEIGHT - 12 - 25 - 24, 24 * 4, 24)) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_4) {
-
-                if (now_reward_page < rewards.size() / rewardPrePage - 1)
+                if (now_reward_page < rewards.size() / rewardPrePage - 1) {
                     now_reward_page++;
-                return 1;
+                    return 1;
+                }
+
             }
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_5) {
-                if (now_reward_page > 0)
+                if (now_reward_page > 0) {
                     now_reward_page--;
+                    return 1;
+                }
+            }
+            for (int i = now_reward_page * 4; i < Math.min((now_task_page + 1) * 4, rewards.size()); i++) {
+                if (rewards.get(i).mouseClicked1(mouseX, mouseY, mouseButton) == 1) {
+                    return 1;
+                }
+            }
+        }
+        if (parent.isMouseInRelativeRange(mouseX, mouseY, GuiBook.PAGE_WIDTH / 2 - 49, 25, 24 * 4, 24 * 2)) {
+            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_4) {
+                if (now_task_page < tasks.size() - 1) {
+                    now_task_page++;
+                    return 1;
+                }
+            }
+            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_5) {
+                if (now_task_page > 0) {
+                    now_task_page--;
+                    return 1;
+                }
+            }
+            if (tasks.get(now_task_page).mouseClicked1(mouseX, mouseY, mouseButton) == 1) {
                 return 1;
             }
         }
@@ -191,25 +221,27 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     @Override
     protected void questButtonClicked(Button button) {
         questButtonClicked1(button);
+    }
+
+    public void checkStats(Book book) {
         String res = entry.getId().toString();
-        PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(parent.book);
+        PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(book);
         for (BaseTask i : tasks) {
             if (i.stats < 1) {
+                stats = -1;
                 if (data.completedManualQuests.contains(res)) {
                     data.completedManualQuests.remove(res);
                     PersistentData.save();
-                    updateButtonText(button);
                     entry.markReadStateDirty();
                 }
                 return;
             }
-
         }
+        stats = 1;
         if (!data.completedManualQuests.contains(res)) {
             data.completedManualQuests.add(res);
         }
         PersistentData.save();
-        updateButtonText(button);
         entry.markReadStateDirty();
     }
 
@@ -293,13 +325,13 @@ public class PageBaseQuest extends PageQuest implements MouseHandler, NetComp {
     }
 
     public void readBuffer(PacketBuffer buffer) {
-        stats = buffer.readVarInt();
+//        stats = buffer.readVarInt();
         hide = buffer.readBoolean();
         lock = buffer.readBoolean();
     }
 
     public void writeBuffer(PacketBuffer buffer, ServerPlayerEntity entity) {
-        buffer.writeVarInt(getStats(entity));
+//        buffer.writeVarInt(getStats(entity));
         buffer.writeBoolean(getHide(entity));
         buffer.writeBoolean(getLock(entity));
     }
