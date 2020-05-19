@@ -103,19 +103,22 @@ public class ItemReward extends BaseReward {
             if (page.stats > 0) {
                 if (receive == 0) {
                     if (item.size() > 1) {
-                        if (random) {
+//                        if (random) {
                             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get.random")
-                                    .setStyle(new Style().setColor(TextFormatting.GREEN)));
-                        } else {
-                            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get.more")
                                     .setStyle(new Style().setColor(TextFormatting.GREEN)));
                             list.add(new TranslationTextComponent("patchouliquests.tooltip.item.change.more")
                                     .setStyle(new Style().setColor(TextFormatting.GREEN)));
-                        }
+//                        } else {
+//                            list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get.more")
+//                                    .setStyle(new Style().setColor(TextFormatting.GREEN)));
+
+//                        }
                     } else {
                         list.add(new TranslationTextComponent("patchouliquests.tooltip.item.get")
                                 .setStyle(new Style().setColor(TextFormatting.GREEN)));
                     }
+                    super.rewardToolTip(list);
+
                 } else {
                     list.add(new TranslationTextComponent("patchouliquests.tooltip.item.alread_get"));
                 }
@@ -147,6 +150,10 @@ public class ItemReward extends BaseReward {
             JsonElement random = ((JsonObject) json).get("random");
             if (random != null) {
                 reward.random = random.getAsBoolean();
+            }
+            JsonElement group = ((JsonObject) json).get("group");
+            if (group!=null){
+                reward.group = group.getAsInt();
             }
         }
         return reward;

@@ -11,6 +11,10 @@ public class CloneHandler {
     public static void onClone(PlayerEvent.Clone event) {
         if (event.getOriginal().getPersistentData().get("patchouliquests") != null) {
             event.getEntityLiving().getPersistentData().put("patchouliquests", event.getOriginal().getPersistentData().get("patchouliquests"));
+            event.getEntityLiving().getPersistentData().put("patchouliquests_person", event.getOriginal().getPersistentData().get("patchouliquests_person"));
+        }
+        if (event.getOriginal().getPersistentData().get("patchouliquests_person") != null) {
+            event.getEntityLiving().getPersistentData().put("patchouliquests_person", event.getOriginal().getPersistentData().get("patchouliquests_person"));
         }
     }
 }

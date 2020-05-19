@@ -11,7 +11,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
@@ -24,7 +23,7 @@ public class C2SItemRewardPacket extends ClientPacket {
     int index;
     int index2;
 
-    public C2SItemRewardPacket(ResourceLocation book, ResourceLocation entry, int id, int index,int index2) {
+    public C2SItemRewardPacket(ResourceLocation book, ResourceLocation entry, int id, int index, int index2) {
         this.book = book;
         this.entry = entry;
         this.id = id;
@@ -49,7 +48,7 @@ public class C2SItemRewardPacket extends ClientPacket {
             int page = i.id;
             int index = buffer.readVarInt();
             int index2 = buffer.readVarInt();
-            return new C2SItemRewardPacket(book, entry, page, index,index2);
+            return new C2SItemRewardPacket(book, entry, page, index, index2);
         }
 
         @Override
@@ -60,14 +59,52 @@ public class C2SItemRewardPacket extends ClientPacket {
                 if (player == null) return;
                 PageBaseQuest page = BookNBTHelper.getPage(book.contents.entries.get(message.entry).getPages(), message.id);
                 if (page != null) {
-                    BaseReward reward = ((PageBaseQuest) page).rewards.get(message.index);
+                    BaseReward reward = (page).rewards.get(message.index);
                     if (reward instanceof ItemReward) {
-                        int ok = ((ItemReward) reward).getReceive(player);
-                        if (ok==0){
+                        int ok = (reward).getReceive(player);
+                        if (ok == 0) {
+                            int group = reward.group;
+                            (reward).setReceive(player, 1);
+                            if (page.rewards.stream().anyMatch(i->i.group == group && i.receive != 0)){
+                                if(reward.teamOne)
+                                {
+                                    new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1)
+                                            .send(player, TeamWorldSavedData.getTeamPlayers(player));
+                                }
+                                else {
+                                    new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1).send(player);
+
+                                }
+                                return;
+                            }
+                            for(BaseReward i : page.rewards){
+                                if (i.group == group&&i.receive==0){
+                                    i.setReceive(player,1);
+                                    if (i.teamOne)
+                                    {
+                                        new S2CItemRewardPacket(message.book, message.entry, message.id, i.num, 1)
+                                                .send(player, TeamWorldSavedData.getTeamPlayers(player));
+                                    }
+                                    else {
+                                        new S2CItemRewardPacket(message.book, message.entry, message.id, i.num, 1).send(player);
+
+                                    }
+                                }
+                            }
                             player.addItemStackToInventory(((ItemReward) reward).item.get(message.index2).copy());
-                            ((ItemReward) reward).setReceive(player,1);
+
                         }
-                        new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1).send(player, TeamWorldSavedData.getTeamPlayers(player));
+
+                        if (reward.teamOne)
+                        {
+                            new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1)
+                                    .send(player, TeamWorldSavedData.getTeamPlayers(player));
+
+                        }
+                        else {
+                            new S2CItemRewardPacket(message.book, message.entry, message.id, message.index, 1).send(player);
+
+                        }
                     }
                 }
             });

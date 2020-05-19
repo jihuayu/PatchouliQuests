@@ -23,5 +23,7 @@
   "patchouliquests.tooltip.item.alread_get": "Already get reward.",
   "patchouliquests.tooltip.item.change.more": "Shift + wheel to change the reward.",
   "patchouliquests.item_task.consume": "You need have%s %s",
-  "patchouliquests.item_task.no_consume": "You need submit%s %s"
+  "patchouliquests.item_task.no_consume": "You need submit%s %s",
+  "patchouliquests.tooltip.reward.team_one": "Only one for a team!",
+  "patchouliquests.tooltip.reward.group.text": "You can only get one in same group."
 }
